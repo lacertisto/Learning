@@ -84,4 +84,7 @@ Plugins/*/Binaries/*
 Build/*
 
 #Exclude ExternalContent
-Content/ExternalContent/*
+Content/Animations/*
+Content/Characters/*
+Content/Environment/*
+Content/Sounds/*
