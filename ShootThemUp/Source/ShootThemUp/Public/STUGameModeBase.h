@@ -14,6 +14,6 @@ class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-private:
-	virtual void BeginPlay() override;
+public:
+	ASTUGameModeBase();
 };
