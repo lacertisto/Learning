@@ -53,11 +53,13 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
 	IsMovingForward = Amount > 0.0f;
+	if(Amount == 0.0f) return;
 	AddMovementInput(GetActorForwardVector(),Amount);
 }
 
 void ASTUBaseCharacter::MoveSideways(float Amount)
 {
+	if(Amount == 0.0f)return;
 	AddMovementInput(GetActorRightVector(),Amount); //pawn function to do some movement by getting current unit vector and multiplying it by amount to shift
 }
 
@@ -74,4 +76,15 @@ void ASTUBaseCharacter::OnStopRunning()
 bool ASTUBaseCharacter::IsRunning() const
 {
 	return WantsToRun && IsMovingForward && !GetVelocity().IsZero();
+}
+
+float ASTUBaseCharacter::GetMovementDirection() const
+{
+	if(GetVelocity().IsZero()) return 0.0f;
+	
+	const auto VelocityNormal = GetVelocity().GetSafeNormal(); //calculate normal of speed vector
+	const auto  AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal)); //scalar product of forward and normal vector by getting acos
+	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(),VelocityNormal); //orthogonal vector for calculate
+	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
+	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z); //convert result to degrees and multiplying by a sign from orthogonal vector
 }
