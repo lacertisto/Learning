@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
+#include "Components/TextRenderComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "STUBaseCharacter.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -28,6 +30,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UCameraComponent* CameraComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Category")
+	UTextRenderComponent* HealthTextComponent;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -3,24 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/ActorComponent.h"
 #include "STUHealthComponent.generated.h"
 
-UCLASS()
-class SHOOTTHEMUP_API ASTUHealthComponent : public AActor
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASTUHealthComponent();
 
+public:	
+	// Sets default values for this component's properties
+	USTUHealthComponent();
+
+	float GetHealth(){return Health;};
+	
 protected:
-	// Called when the game starts or when spawned
+	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+private:
+	float Health = 0.0f;	
 };
