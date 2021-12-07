@@ -16,12 +16,18 @@ public:
 	// Sets default values for this component's properties
 	USTUHealthComponent();
 
-	float GetHealth(){return Health;};
+	float GetHealth() const {return Health;};
 	
 protected:
 	// Called when the game starts
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (ClampMin = "0", ClampMax="100"))
+	float MaxHealth = 100.0f;
+	
 	virtual void BeginPlay() override;
 
 private:
-	float Health = 0.0f;	
+	float Health = 0.0f;
+	
+	UFUNCTION()
+	void OnTakeAnyDamage(AActor* DamageActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };

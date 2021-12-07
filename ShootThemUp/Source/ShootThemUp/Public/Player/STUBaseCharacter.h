@@ -3,14 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUHealthComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
+
+#include <destructible/ModuleDestructible.h>
+
 #include "STUBaseCharacter.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
+class USTUHealthComponent;
 class UTextRenderComponent;
 
 UCLASS()
@@ -30,6 +35,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UCameraComponent* CameraComponent;
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Components")
+	USTUHealthComponent* HealthComponent;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Category")
 	UTextRenderComponent* HealthTextComponent;
 
@@ -57,4 +65,6 @@ private:
 	void MoveSideways(float Amount);
 	void OnStartRunning();
 	void OnStopRunning();
+
+
 };
