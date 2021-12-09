@@ -17,7 +17,13 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USceneComponent* SceneComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Radius = 300.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FColor SphereColor = FColor::Red;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -2,6 +2,7 @@
 
 
 #include "Dev/STUDevDamageActor.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASTUDevDamageActor::ASTUDevDamageActor()
@@ -25,5 +26,6 @@ void ASTUDevDamageActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 24, SphereColor);
 }
 
