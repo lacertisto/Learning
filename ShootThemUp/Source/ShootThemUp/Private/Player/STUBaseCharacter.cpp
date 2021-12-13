@@ -9,6 +9,8 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
+
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit):Super(ObjInit.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
@@ -35,6 +37,11 @@ void ASTUBaseCharacter::BeginPlay()
 
 	check(HealthComponent);
 	check(HealthTextComponent);
+	check(GetCharacterMovement());
+
+	OnHealthChanged(HealthComponent->GetHealth());
+	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
 
 }
 
@@ -42,9 +49,6 @@ void ASTUBaseCharacter::BeginPlay()
 void ASTUBaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	const auto Health = HealthComponent->GetHealth();
-	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 
 }
 
@@ -101,4 +105,21 @@ float ASTUBaseCharacter::GetMovementDirection() const
 	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z); //convert result to degrees and multiplying by a sign from orthogonal vector
 }
 
+void ASTUBaseCharacter::OnDeath()
+{
+	UE_LOG(LogBaseCharacter, Display, TEXT("Player %s Is Dead !!!"), *GetName());
+
+	PlayAnimMontage(DeathAnimMontage);
+	GetCharacterMovement()->DisableMovement();
+	SetLifeSpan(5.0f);
+	if(Controller)
+	{
+		Controller->ChangeState(NAME_Spectating);
+	}
+}
+
+void ASTUBaseCharacter::OnHealthChanged(float Health)
+{
+	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}
 

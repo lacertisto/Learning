@@ -7,16 +7,18 @@
 #include "Camera/CameraComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-
-#include <destructible/ModuleDestructible.h>
-
 #include "STUBaseCharacter.generated.h"
+
+
 
 class UCameraComponent;
 class USpringArmComponent;
 class USTUHealthComponent;
 class UTextRenderComponent;
+
+
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -41,6 +43,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Category")
 	UTextRenderComponent* HealthTextComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* DeathAnimMontage;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -66,5 +71,6 @@ private:
 	void OnStartRunning();
 	void OnStopRunning();
 
-
+	void OnDeath();
+	void OnHealthChanged(float Health);
 };
