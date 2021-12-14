@@ -11,14 +11,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "STUBaseCharacter.generated.h"
 
-
-
 class UCameraComponent;
 class USpringArmComponent;
 class USTUHealthComponent;
 class UTextRenderComponent;
-
-
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -40,21 +36,25 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Components")
 	USTUHealthComponent* HealthComponent;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Category")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UTextRenderComponent* HealthTextComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* DeathAnimMontage;
 	
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	float LifeSpanOnDeath = 5.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	FVector2D LandedDamageVelocity = FVector2D(900.0f, 1200.0f);
+
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
+	FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category="Movement")
 		bool IsRunning() const;
@@ -62,6 +62,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Movement")
 	float GetMovementDirection() const;
 	
+	// Called every frame
+    virtual void Tick(float DeltaTime) override;
+
+    // Called to bind functionality to input
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 private:
 	bool WantsToRun = false;
 	bool IsMovingForward = false;
@@ -73,4 +79,7 @@ private:
 
 	void OnDeath();
 	void OnHealthChanged(float Health);
+
+	UFUNCTION()
+	void OnGroundLanded(const FHitResult& Hit);
 };
