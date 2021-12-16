@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "STUBaseWeapon.generated.h"
 
+class USkeletalMeshComponent;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 {
@@ -16,11 +18,10 @@ public:
 	ASTUBaseWeapon();
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= "Components")
+	USkeletalMeshComponent* WeaponMeshComponent;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };

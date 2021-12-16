@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUBaseWeapon.h"
 #include "STUHealthComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -15,6 +16,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USTUHealthComponent;
 class UTextRenderComponent;
+class ASTUBaseWeapon;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -50,6 +52,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Damage")
 	FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
+
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
+	TSubclassOf<ASTUBaseWeapon> WeaponClass;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -82,4 +87,6 @@ private:
 
 	UFUNCTION()
 	void OnGroundLanded(const FHitResult& Hit);
+
+	void SpawnWeapon();
 };
