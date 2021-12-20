@@ -33,9 +33,6 @@ protected:
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const override;
 
 private:
-
-	
-
 	
 	FTimerHandle ShotTimerHandle;
     	

@@ -4,6 +4,7 @@
 #include "Weapon/STURifleWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "GameFramework/Character.h"
 
 void ASTURifleWeapon::MakeShot()
 {
@@ -21,9 +22,8 @@ void ASTURifleWeapon::MakeShot()
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
 		AActor* Target = HitResult.GetActor();
 
-
 		
-		if (HitResult.GetActor() != nullptr)
+		if (HitResult.GetActor() != nullptr )
 		{
 			Target->TakeDamage(DamageAmount,FDamageEvent(),GetPlayerController(),this);
 		}
@@ -60,4 +60,3 @@ bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 	TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
 	return true;
 }
-
