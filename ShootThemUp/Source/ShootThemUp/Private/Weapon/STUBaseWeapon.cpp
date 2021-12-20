@@ -30,36 +30,19 @@ void ASTUBaseWeapon::BeginPlay()
 
 void ASTUBaseWeapon::MakeShot()
 {
-	if(!GetWorld()) return;
 
-	FVector TraceStart, TraceEnd;
-	if(!GetTraceData(TraceStart, TraceEnd)) return;
-
-	FHitResult HitResult;
-	MakeHit(HitResult, TraceStart, TraceEnd);
-	
-	if(HitResult.bBlockingHit && HitResult.GetActor() != nullptr)
-	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
-		AActor* Target = HitResult.GetActor();
-		UE_LOG(LogBaseWeapon, Display, TEXT("Bone: %s, Actor: %s"), *HitResult.BoneName.ToString(), *Target->GetName());
-		Target->TakeDamage(DamageAmount,FDamageEvent(),GetPlayerController(),this);
-		
-	}
-	else
-	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation() , TraceEnd, FColor::Red, false, 3.0f,0,3.0f);
-	}
-	
 }
 
-void ASTUBaseWeapon::Fire()
+void ASTUBaseWeapon::StartFire()
 {
-	UE_LOG(LogBaseWeapon,Display,TEXT("Fire!"));
-
-	MakeShot();
+	
 }
+
+void ASTUBaseWeapon::StopFire()
+{
+	
+}
+
 
 APlayerController* ASTUBaseWeapon::GetPlayerController() const
 {
@@ -83,6 +66,7 @@ FVector ASTUBaseWeapon::GetMuzzleWorldLocation() const
 {
  return WeaponMeshComponent->GetSocketLocation(MuzzleSocketName);	
 }
+
 
 bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 {
