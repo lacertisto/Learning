@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void ASTURifleWeapon::MakeShot()
 {
@@ -18,6 +19,11 @@ void ASTURifleWeapon::MakeShot()
 	
 	if(HitResult.bBlockingHit) 
 	{
+		const auto Controller = GetPlayerController();
+		FVector Location;
+		FRotator Rotation;
+		Controller->GetPlayerViewPoint(Location, Rotation);
+
 		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
 		AActor* Target = HitResult.GetActor();
@@ -30,7 +36,7 @@ void ASTURifleWeapon::MakeShot()
 	}
 	else
 	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation() , TraceEnd, FColor::Red, false, 3.0f,0,3.0f);
+		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 3.0f,0,3.0f);
 	}
 	
 }
