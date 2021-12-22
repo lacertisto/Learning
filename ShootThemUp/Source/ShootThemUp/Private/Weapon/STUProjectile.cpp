@@ -29,7 +29,6 @@ void ASTUProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	check(ProjectileMovementComponent);
-	check(ProjectileMovementComponent->ProjectileGravityScale != 0.0f)
 	ProjectileMovementComponent->Velocity = ShotDirection * ProjectileMovementComponent->InitialSpeed;
 
 	SetLifeSpan(5.0f);

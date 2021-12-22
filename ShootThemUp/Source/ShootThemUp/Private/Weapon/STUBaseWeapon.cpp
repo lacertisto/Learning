@@ -5,9 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
-#include "Viewports.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/Controller.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
 
@@ -87,6 +85,22 @@ void  ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, 
 	
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetOwner());
-	
+
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
+}
+
+void ASTUBaseWeapon::GetAimAngle(FHitResult& CameraHitResult)
+{
+	const FTransform SocketTransform = WeaponMeshComponent->GetSocketTransform(MuzzleSocketName);
+	const FVector ActualTraceEnd = CameraHitResult.bBlockingHit ? CameraHitResult.ImpactPoint : CameraHitResult.TraceEnd;
+	const FVector HitDirectionFromMuzzle = (ActualTraceEnd - SocketTransform.GetLocation()).GetSafeNormal();
+	const float Degrees = FMath::RadiansToDegrees(
+			FMath::Acos(
+				FVector::DotProduct(SocketTransform.GetRotation().GetForwardVector(), HitDirectionFromMuzzle)));
+     
+	UE_LOG(LogBaseWeapon, Display, TEXT("Shooting angle: %.0f"), Degrees);
+	if(Degrees > 90.0f)
+	{
+		UE_LOG(LogBaseWeapon, Error, TEXT("Attempted to shoot backwards!"));
+	}
 }

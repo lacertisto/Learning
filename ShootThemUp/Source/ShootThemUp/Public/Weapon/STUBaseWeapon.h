@@ -47,6 +47,8 @@ protected:
 	
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 	
+	void GetAimAngle(FHitResult& CameraHitResult);
+
 	void  MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 
 private:

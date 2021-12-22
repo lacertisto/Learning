@@ -5,7 +5,6 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
-#include "Kismet/KismetMathLibrary.h"
 
 void ASTURifleWeapon::MakeShot()
 {
@@ -14,21 +13,20 @@ void ASTURifleWeapon::MakeShot()
 	FVector TraceStart, TraceEnd;
 	if(!GetTraceData(TraceStart, TraceEnd)) return;
 
+	FVector Location;
+	FRotator Rotation; 
+	GetPlayerViewPoint(Location,Rotation);
+	
+	
 	FHitResult HitResult;
 	MakeHit(HitResult, TraceStart, TraceEnd);
 	
 	if(HitResult.bBlockingHit) 
 	{
-		const auto Controller = GetPlayerController();
-		FVector Location;
-		FRotator Rotation;
-		Controller->GetPlayerViewPoint(Location, Rotation);
-
 		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
 		AActor* Target = HitResult.GetActor();
-
-		
+		GetAimAngle(HitResult);
 		if (HitResult.GetActor() != nullptr )
 		{
 			Target->TakeDamage(DamageAmount,FDamageEvent(),GetPlayerController(),this);
@@ -63,6 +61,7 @@ bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 	TraceStart = ViewLocation; // or SocketTransform.GetLocation();
 	const auto HalfRad = FMath::DegreesToRadians(BulletSpread);
 	const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(),HalfRad); // or SocketTransform.GetRotation().GetForwardVector();
+	// UE_LOG(LogRifleWeapon,Warning,TEXT("%s"), *ShootDirection.ToString());
 	TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
 	return true;
 }
