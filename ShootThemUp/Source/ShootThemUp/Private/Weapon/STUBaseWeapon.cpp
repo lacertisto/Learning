@@ -89,7 +89,7 @@ void  ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, 
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
 }
 
-void ASTUBaseWeapon::GetAimAngle(FHitResult& CameraHitResult)
+bool ASTUBaseWeapon::GetAimAngle(FHitResult& CameraHitResult)
 {
 	const FTransform SocketTransform = WeaponMeshComponent->GetSocketTransform(MuzzleSocketName);
 	const FVector ActualTraceEnd = CameraHitResult.bBlockingHit ? CameraHitResult.ImpactPoint : CameraHitResult.TraceEnd;
@@ -98,9 +98,11 @@ void ASTUBaseWeapon::GetAimAngle(FHitResult& CameraHitResult)
 			FMath::Acos(
 				FVector::DotProduct(SocketTransform.GetRotation().GetForwardVector(), HitDirectionFromMuzzle)));
      
-	UE_LOG(LogBaseWeapon, Display, TEXT("Shooting angle: %.0f"), Degrees);
+	//UE_LOG(LogBaseWeapon, Display, TEXT("Shooting angle: %.0f"), Degrees);
 	if(Degrees > 90.0f)
 	{
-		UE_LOG(LogBaseWeapon, Error, TEXT("Attempted to shoot backwards!"));
+	//	UE_LOG(LogBaseWeapon, Error, TEXT("Attempted to shoot backwards!"));
+		return false;
 	}
+	return true;
 }

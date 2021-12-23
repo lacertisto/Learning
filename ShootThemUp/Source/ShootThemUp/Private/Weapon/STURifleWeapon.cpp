@@ -21,13 +21,13 @@ void ASTURifleWeapon::MakeShot()
 	FHitResult HitResult;
 	MakeHit(HitResult, TraceStart, TraceEnd);
 	
-	if(HitResult.bBlockingHit) 
+	if(HitResult.bBlockingHit && GetAimAngle(HitResult)) 
 	{
 		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
 		AActor* Target = HitResult.GetActor();
-		GetAimAngle(HitResult);
-		if (HitResult.GetActor() != nullptr )
+		
+		if (HitResult.GetActor() != nullptr)
 		{
 			Target->TakeDamage(DamageAmount,FDamageEvent(),GetPlayerController(),this);
 		}

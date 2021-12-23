@@ -24,10 +24,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= "Components")
 	USkeletalMeshComponent* WeaponMeshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FName MuzzleSocketName = "MuzzleSocket";
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float TraceMaxDistance = 1500.0f;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
@@ -47,7 +47,7 @@ protected:
 	
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 	
-	void GetAimAngle(FHitResult& CameraHitResult);
+	bool GetAimAngle(FHitResult& CameraHitResult);
 
 	void  MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 
