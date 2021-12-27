@@ -5,6 +5,7 @@
 #include "Weapon/STUBaseWeapon.h"
 #include "GameFramework/Character.h"
 #include "Animations/STU_EquipFinishedAnimNotify.h"
+#include "Animations/STUReloadFinishedAnimNotify.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent,All,All);
 
@@ -45,11 +46,12 @@ void USTUWeaponComponent::SpawnWeapons()
 	ACharacter*	Character = Cast<ACharacter>(GetOwner());
 	if(!Character || !GetWorld()) return;
 
-	for(auto WeaponClass : WeaponClasses)
+	for(auto OneWeaponData : WeaponData)
 	{
-		auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
+		auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(OneWeaponData.WeaponClass);
 		if(!Weapon) continue;
 
+		Weapon->OnClipEmpty.AddUObject(this,&USTUWeaponComponent::OnEmptyClip);
 		Weapon->SetOwner(Character);
 		Weapons.Add(Weapon);
 		AttachWeaponToSocket(Weapon, Character->GetMesh(), WeaponArmorySocketName);
@@ -66,6 +68,11 @@ void USTUWeaponComponent::AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneCom
 
 void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 {
+	if(WeaponIndex < 0 || WeaponIndex >= Weapons.Num())
+	{
+		UE_LOG(LogWeaponComponent, Warning, TEXT("Invalid weapon Index"));
+		return;
+	}
 	ACharacter*	Character = Cast<ACharacter>(GetOwner());
 	if(!Character) return;
 
@@ -76,6 +83,13 @@ void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 	}
 	
 	CurrentWeapon = Weapons[WeaponIndex];
+	//CurrentReloadAnimMontage = WeaponData[WeaponIndex].ReloadAnimMontage;
+	const auto CurrentWeaponData = WeaponData.FindByPredicate([&](const FWeaponData& Data)
+	{
+		return Data.WeaponClass == CurrentWeapon->GetClass();//
+	});
+	CurrentReloadAnimMontage = CurrentWeaponData ? CurrentWeaponData->ReloadAnimMontage : nullptr;
+	
 	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
 	EquipAnimInProgress = true;
 	PlayAnimMontage(EquipAnimMontage);
@@ -108,17 +122,18 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation)
 
 void USTUWeaponComponent::InitAnimations()
 {
-	if(!EquipAnimMontage) return;
 	
-	const auto NotifyEvents = EquipAnimMontage->Notifies;
-	for(auto NotifyEvent: NotifyEvents)
+	auto EquipFinishedNotify = FindNotifyByClass<USTU_EquipFinishedAnimNotify>(EquipAnimMontage);
+	if(EquipFinishedNotify)
+    {
+    	EquipFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
+    }
+
+	for(auto OneWeaponData : WeaponData)
 	{
-		auto EquipFinishedNotify = Cast<USTU_EquipFinishedAnimNotify>(NotifyEvent.Notify);
-		if(EquipFinishedNotify)
-		{
-			EquipFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
-			break;
-		}
+		auto ReloadFinishedNotify = FindNotifyByClass<USTUReloadFinishedAnimNotify>(OneWeaponData.ReloadAnimMontage);
+		if(!ReloadFinishedNotify) continue;
+		ReloadFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
 	}
 }
 
@@ -130,12 +145,47 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
 	EquipAnimInProgress = false;
 }
 
+void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComponent)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if(!Character || Character->GetMesh() != MeshComponent) return;
+
+	ReloadAnimInProgress = false;
+}
+
 bool USTUWeaponComponent::CanFire() const
 {
-	return CurrentWeapon && !EquipAnimInProgress;
+	return CurrentWeapon && !EquipAnimInProgress && !ReloadAnimInProgress;
 }
 
 bool USTUWeaponComponent::CanEquip() const
 {
-	return !EquipAnimInProgress;
+	return !EquipAnimInProgress && !ReloadAnimInProgress;
+}
+
+bool USTUWeaponComponent::CanReload() const
+{
+	return CurrentWeapon //
+	&& !EquipAnimInProgress //
+	&& !ReloadAnimInProgress//
+	&& CurrentWeapon->CanReload();
+}
+
+void USTUWeaponComponent::OnEmptyClip()
+{
+	ChangeClip();
+}
+
+void USTUWeaponComponent::ChangeClip()
+{
+	if(!CanReload()) return;
+	CurrentWeapon->StopFire();
+	CurrentWeapon->ChangeClip();
+	ReloadAnimInProgress = true;
+	PlayAnimMontage(CurrentReloadAnimMontage);
+}
+
+void USTUWeaponComponent::Reload()
+{
+	ChangeClip();
 }

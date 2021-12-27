@@ -110,12 +110,18 @@ bool ASTUBaseWeapon::GetAimAngle(FHitResult& CameraHitResult)
 
 void ASTUBaseWeapon::DecreaseAmmo()
 {
+	if(CurrentAmmo.Bullets == 0)
+	{
+		UE_LOG(LogBaseWeapon,Warning,TEXT("No more bullets"));
+		return;
+	}
 	CurrentAmmo.Bullets --;
 	LogAmmo();
 
 	if(IsClipEmpty() && !IsAmmoEmpty())
 	{
-		ChangeClip();
+		StopFire();
+		OnClipEmpty.Broadcast();
 	}
 }
 
@@ -134,10 +140,21 @@ void ASTUBaseWeapon::ChangeClip()
 	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 	if(!CurrentAmmo.Infinite)
 	{
+		if(CurrentAmmo.Clips == 0)
+		{
+			UE_LOG(LogBaseWeapon, Warning, TEXT("No more clips"));
+			return;
+		}
 		CurrentAmmo.Clips--;
 	}
 	UE_LOG(LogBaseWeapon,Display,TEXT("---------------------Changed Clip--------------------"));
 }
+
+bool ASTUBaseWeapon::CanReload() const
+{
+	return CurrentAmmo.Bullets < DefaultAmmo.Bullets && CurrentAmmo.Clips > 0;
+}
+
 
 void ASTUBaseWeapon::LogAmmo()
 {
