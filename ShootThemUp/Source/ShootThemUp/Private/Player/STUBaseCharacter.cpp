@@ -74,7 +74,7 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&ASTUBaseCharacter::Jump);
 	PlayerInputComponent->BindAction("Run",IE_Pressed, this, &ASTUBaseCharacter::OnStartRunning);
 	PlayerInputComponent->BindAction("Run",IE_Released,this,&ASTUBaseCharacter::OnStopRunning);
-	PlayerInputComponent->BindAction("Fire",IE_Pressed,WeaponComponent,&USTUWeaponComponent::StartFire);
+	PlayerInputComponent->BindAction("Fire",IE_Pressed,this,&ASTUBaseCharacter::OnStartFire);
 	PlayerInputComponent->BindAction("Fire",IE_Released,WeaponComponent,&USTUWeaponComponent::StopFire);
 	PlayerInputComponent->BindAction("NextWeapon",IE_Pressed,WeaponComponent,&USTUWeaponComponent::NextWeapon);
 	PlayerInputComponent->BindAction("Reload",IE_Pressed,WeaponComponent,&USTUWeaponComponent::Reload);
@@ -85,6 +85,8 @@ void ASTUBaseCharacter::MoveForward(float Amount)
 	IsMovingForward = Amount > 0.0f;
 	if(Amount == 0.0f) return;
 	AddMovementInput(GetActorForwardVector(),Amount);
+
+	if(IsRunning() && WeaponComponent->IsFiring()) WeaponComponent->StopFire();
 }
 
 void ASTUBaseCharacter::MoveSideways(float Amount)
@@ -93,9 +95,17 @@ void ASTUBaseCharacter::MoveSideways(float Amount)
 	AddMovementInput(GetActorRightVector(),Amount); //pawn function to do some movement by getting current unit vector and multiplying it by amount to shift
 }
 
+void ASTUBaseCharacter::OnStartFire()
+{
+	if(IsRunning()) return;
+	WeaponComponent->StartFire();
+}
+
+
 void ASTUBaseCharacter::OnStartRunning()
 {
 	WantsToRun = true;
+	if(IsRunning()) WeaponComponent->StopFire();
 }
 
 void ASTUBaseCharacter::OnStopRunning()

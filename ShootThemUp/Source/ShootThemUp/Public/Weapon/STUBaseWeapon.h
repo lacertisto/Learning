@@ -25,6 +25,7 @@ public:
 	virtual void StopFire();
 	void ChangeClip();
 	bool CanReload() const;
+	bool IsFiring() const;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= "Components")
@@ -38,6 +39,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	FAmmoData DefaultAmmo{15,10,false};
+
+	bool FireInProgress = false;
 	
 	virtual void BeginPlay() override;
 
@@ -60,8 +63,7 @@ protected:
 	bool IsAmmoEmpty() const;
 	
 	bool IsClipEmpty() const;
-	
-	
+
 	void LogAmmo();
 
 private:

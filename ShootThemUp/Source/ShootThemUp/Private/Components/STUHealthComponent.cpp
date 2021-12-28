@@ -5,9 +5,11 @@
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "GenericPlatform/GenericPlatformCrashContext.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
+
 // Sets default values for this component's properties
 USTUHealthComponent::USTUHealthComponent()
 {
@@ -24,6 +26,8 @@ void USTUHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	check(MaxHealth > 0);
+	
 	SetHealth(MaxHealth);
 
 	AActor* ComponentOwner = GetOwner();

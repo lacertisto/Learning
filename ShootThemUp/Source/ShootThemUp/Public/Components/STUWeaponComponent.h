@@ -22,6 +22,7 @@ public:
 	void StopFire();
 	void NextWeapon();
 	void Reload();
+	bool IsFiring() const;
 	
 protected:
 
@@ -70,6 +71,7 @@ private:
 	bool CanFire() const;
 	bool CanEquip() const;
 	bool CanReload() const;
+
 
 	void OnEmptyClip();
 	void ChangeClip();

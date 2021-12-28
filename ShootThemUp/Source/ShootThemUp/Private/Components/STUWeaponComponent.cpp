@@ -173,6 +173,12 @@ bool USTUWeaponComponent::CanFire() const
 	return CurrentWeapon && !EquipAnimInProgress && !ReloadAnimInProgress;
 }
 
+bool USTUWeaponComponent::IsFiring() const
+{
+	return CurrentWeapon && CurrentWeapon->IsFiring();
+}
+
+
 bool USTUWeaponComponent::CanEquip() const
 {
 	return !EquipAnimInProgress && !ReloadAnimInProgress;

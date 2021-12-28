@@ -76,6 +76,7 @@ private:
 	void MoveSideways(float Amount);
 	void OnStartRunning();
 	void OnStopRunning();
+	void OnStartFire();
 
 	void OnDeath();
 	void OnHealthChanged(float Health);
