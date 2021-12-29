@@ -8,7 +8,8 @@
 #include "Animations/STUReloadFinishedAnimNotify.h"
 #include "Animations/AnimUtils.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent,All,All);
+
+DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
 constexpr static int32 WeaponsNum = 2;
 
@@ -176,6 +177,26 @@ bool USTUWeaponComponent::CanFire() const
 bool USTUWeaponComponent::IsFiring() const
 {
 	return CurrentWeapon && CurrentWeapon->IsFiring();
+}
+
+bool USTUWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
+{
+	if(CurrentWeapon)
+	{
+		UIData = CurrentWeapon->GetUIData();
+		return true;
+	}
+	return false;
+}
+
+bool USTUWeaponComponent::GetCurrentAmmoData(FAmmoData& CurrentAmmo) const
+{
+	if(CurrentWeapon)
+	{
+		CurrentAmmo = CurrentWeapon->GetCurrentAmmoData();
+		return true;
+	}
+	return false;
 }
 
 

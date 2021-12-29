@@ -23,7 +23,11 @@ public:
 	void NextWeapon();
 	void Reload();
 	bool IsFiring() const;
-	
+
+	bool GetWeaponUIData(FWeaponUIData& UIData) const;
+	bool GetCurrentAmmoData(FAmmoData& CurrentAmmo) const;
+
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
