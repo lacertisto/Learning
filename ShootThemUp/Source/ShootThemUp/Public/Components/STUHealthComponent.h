@@ -27,6 +27,9 @@ public:
 	float GetHealthPercent() const { return Health / MaxHealth;}
 	
 	float GetHealth() const {return Health;};
+
+	bool TryToAddHealth(float HealthAmount);
+	bool IsHealthFull();
 	
 protected:
 	// Called when the game starts
@@ -56,4 +59,5 @@ private:
 	
 	void HealUpdate();
 	void SetHealth(float NewHealth);
+	
 };

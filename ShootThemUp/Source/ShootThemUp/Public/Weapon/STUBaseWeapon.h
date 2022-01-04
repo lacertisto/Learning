@@ -29,6 +29,8 @@ public:
 
 	FWeaponUIData GetUIData() const {return UIData;}
 	FAmmoData GetCurrentAmmoData() const {return CurrentAmmo;}
+
+	bool TryToAddAmmo(int32 ClipsAmount);
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= "Components")
@@ -69,6 +71,8 @@ protected:
 	bool IsAmmoEmpty() const;
 	
 	bool IsClipEmpty() const;
+
+	bool IsAmmoFull() const;
 
 	void LogAmmo();
 

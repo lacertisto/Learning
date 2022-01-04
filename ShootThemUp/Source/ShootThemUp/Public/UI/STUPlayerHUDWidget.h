@@ -7,8 +7,6 @@
 #include "Blueprint/UserWidget.h"
 #include "STUPlayerHUDWidget.generated.h"
 
-class USTUWeaponComponent;
-
 UCLASS()
 class SHOOTTHEMUP_API USTUPlayerHUDWidget : public UUserWidget
 {
@@ -24,7 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="UI")
 	bool GetCurrentAmmoData(FAmmoData& AmmoData) const;
 
-private:
 	UFUNCTION(BlueprintCallable, Category="UI")
-	USTUWeaponComponent* GetCurrentWeaponComponent() const;
+	bool IsPlayerAlive() const;
+
+	UFUNCTION(BlueprintCallable, Category="UI")
+	bool IsPlayerSpectating() const;
+	
 };

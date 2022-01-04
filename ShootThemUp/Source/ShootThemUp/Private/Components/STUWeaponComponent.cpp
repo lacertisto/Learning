@@ -4,7 +4,7 @@
 #include "Components/STUWeaponComponent.h"
 #include "Weapon/STUBaseWeapon.h"
 #include "GameFramework/Character.h"
-#include "Animations/STU_EquipFinishedAnimNotify.h"
+#include "Animations/STUEquipFinishedAnimNotify.h"
 #include "Animations/STUReloadFinishedAnimNotify.h"
 #include "Animations/AnimUtils.h"
 
@@ -130,7 +130,7 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation)
 void USTUWeaponComponent::InitAnimations()
 {
 	
-	auto EquipFinishedNotify = AnimUtils::FindNotifyByClass<USTU_EquipFinishedAnimNotify>(EquipAnimMontage);
+	auto EquipFinishedNotify = AnimUtils::FindNotifyByClass<USTUEquipFinishedAnimNotify>(EquipAnimMontage);
 	if(EquipFinishedNotify)
     {
     	EquipFinishedNotify->OnNotify.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
@@ -199,6 +199,18 @@ bool USTUWeaponComponent::GetCurrentAmmoData(FAmmoData& CurrentAmmo) const
 	return false;
 }
 
+bool USTUWeaponComponent::TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount)
+{
+	for(const auto Weapon : Weapons)
+	{
+		if(Weapon && Weapon->IsA(WeaponType))
+		{
+			return Weapon->TryToAddAmmo(ClipsAmount);
+		}
+	}
+	return false;
+}
+
 
 bool USTUWeaponComponent::CanEquip() const
 {
@@ -213,9 +225,24 @@ bool USTUWeaponComponent::CanReload() const
 	&& CurrentWeapon->CanReload();
 }
 
-void USTUWeaponComponent::OnEmptyClip()
+void USTUWeaponComponent::OnEmptyClip(ASTUBaseWeapon* AmmoEmptyWeapon)
 {
-	ChangeClip();
+	if(!AmmoEmptyWeapon) return;
+	
+	if(CurrentWeapon == AmmoEmptyWeapon)
+	{
+		ChangeClip();		
+	}
+	else
+	{
+		for(const auto Weapon : Weapons)
+		{
+			if(Weapon == AmmoEmptyWeapon)
+			{
+				Weapon->ChangeClip();
+			}
+		}
+	}
 }
 
 void USTUWeaponComponent::ChangeClip()
