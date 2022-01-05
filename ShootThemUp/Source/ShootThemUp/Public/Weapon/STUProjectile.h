@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STUWeaponFXComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -10,6 +11,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class USTUWeaponFXComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUProjectile : public AActor
@@ -40,6 +42,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Weapon")
 	float LifeSeconds = 5.0f;
+
+	UPROPERTY(VisibleAnywhere, Category="VFX")
+	USTUWeaponFXComponent* WeaponFXComponent;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

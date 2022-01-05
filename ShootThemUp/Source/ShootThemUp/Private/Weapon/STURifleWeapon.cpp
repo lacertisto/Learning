@@ -5,6 +5,20 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
+#include "Weapon/Components/STUWeaponFXComponent.h"
+
+ASTURifleWeapon::ASTURifleWeapon()
+{
+	WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
+}
+
+void ASTURifleWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	check(WeaponFXComponent);
+}
+
 
 void ASTURifleWeapon::MakeShot()
 {
@@ -30,14 +44,15 @@ void ASTURifleWeapon::MakeShot()
 	
 	if(HitResult.bBlockingHit && GetAimAngle(HitResult)) 
 	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
+		//DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
+		//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
 		AActor* Target = HitResult.GetActor();
 		
-		if (HitResult.GetActor() != nullptr)
+		if (Target != nullptr)
 		{
 			Target->TakeDamage(DamageAmount,FDamageEvent(),GetPlayerController(),this);
 		}
+		WeaponFXComponent->PlayImpactFX(HitResult);
 	}
 	else
 	{
