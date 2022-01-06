@@ -9,6 +9,8 @@
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
 
 class USTUWeaponFXComponent;
+class UNiagaraSystem;
+class UNiagaraComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUBaseWeapon
@@ -32,6 +34,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category="Weapon")
 	float DamageAmount = 15.0f;
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="VFX")
+	UNiagaraSystem* TraceFX;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="VFX")
+	FString TraceTargetName = "TraceTarget";
+
 	UPROPERTY(VisibleAnywhere, Category="VFX")
 	USTUWeaponFXComponent* WeaponFXComponent;
 
@@ -42,6 +50,12 @@ protected:
 private:
 	
 	FTimerHandle ShotTimerHandle;
-    	
+
+	UPROPERTY()
+	UNiagaraComponent* MuzzleFXComponent;
+
+	void InitMuzzleFX();
+	void SetMuzzleFXVisibility(bool Visible);
+	void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
 };
 

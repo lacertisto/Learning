@@ -6,6 +6,27 @@
 #include "Components/STUWeaponComponent.h"
 #include "STUUtils.h"
 
+bool USTUPlayerHUDWidget::Initialize()
+{
+	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
+	if(HealthComponent)
+	{
+		HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
+	}
+	
+	return Super::Initialize();
+}
+
+void USTUPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
+{
+	if(HealthDelta < 0.0f)
+	{
+		OnTakeDamage();
+	}
+
+}
+
+
 float USTUPlayerHUDWidget::GetHealthPercentage() const
 {
 	USTUHealthComponent* HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
