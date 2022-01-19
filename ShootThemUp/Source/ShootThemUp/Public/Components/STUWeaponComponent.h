@@ -23,10 +23,12 @@ public:
 	virtual void NextWeapon();
 	void Reload();
 	bool IsFiring() const;
-
+	
+	
 	bool GetWeaponUIData(FWeaponUIData& UIData) const;
 	bool GetCurrentAmmoData(FAmmoData& CurrentAmmo) const;
 	bool TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount);
+	bool NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType);
 
 protected:
 
