@@ -31,5 +31,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
 	TSubclassOf<APawn> AIPawnClass;
 private:
+	int32 CurrentRound = 1;
+	int32 RoundCountdown = 0;
+	FTimerHandle GameRoundTimerHandle;
+	
 	void SpawnBots();
+	void StartRound();
+	void GameTimerUpdate();
 };

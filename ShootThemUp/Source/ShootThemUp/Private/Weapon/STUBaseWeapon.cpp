@@ -197,7 +197,6 @@ bool ASTUBaseWeapon::IsAmmoFull() const
 
 void ASTUBaseWeapon::ChangeClip()
 {
-	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 	if(!CurrentAmmo.Infinite)
 	{
 		if(CurrentAmmo.Clips == 0)
@@ -207,7 +206,8 @@ void ASTUBaseWeapon::ChangeClip()
 		}
 		CurrentAmmo.Clips--;
 	}
-	UE_LOG(LogBaseWeapon,Display,TEXT("---------------------Changed Clip--------------------"));
+	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+	// UE_LOG(LogBaseWeapon,Display,TEXT("---------------------Changed Clip--------------------"));
 }
 
 bool ASTUBaseWeapon::CanReload() const
