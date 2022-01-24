@@ -8,6 +8,7 @@
 #include "Player/STUPlayerController.h"
 #include "UI/STUGameHUD.h"
 #include "AIController.h"
+#include "Player/STUPlayerState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
@@ -16,6 +17,7 @@ ASTUGameModeBase::ASTUGameModeBase()
 	DefaultPawnClass = ASTUBaseCharacter::StaticClass();
 	PlayerControllerClass = ASTUPlayerController::StaticClass();
 	HUDClass = ASTUGameHUD::StaticClass();
+	PlayerStateClass = ASTUPlayerState::StaticClass();
 }
 
 void ASTUGameModeBase::StartPlay()
@@ -23,7 +25,8 @@ void ASTUGameModeBase::StartPlay()
 	Super::StartPlay();
 
 	SpawnBots();
-
+	CreateTeamsInfo();
+	
 	CurrentRound = 1;
 	StartRound();
 }
@@ -69,6 +72,7 @@ void ASTUGameModeBase::GameTimerUpdate()
 		if(CurrentRound + 1 <= GameData.RoundsNum)
 		{
 			++CurrentRound;
+			ResetPlayers();
 			StartRound();
 		}
 		else
@@ -76,5 +80,61 @@ void ASTUGameModeBase::GameTimerUpdate()
 			UE_LOG(LogSTUGameModeBase, Display, TEXT("===========GAME OVER==========="));
 		}
 	}
+}
+
+void ASTUGameModeBase::ResetPlayers()
+{
+	if(!GetWorld()) return;
+
+	for(auto It = GetWorld()->GetControllerIterator(); It; ++It)
+	{
+		ResetOnePlayer(It->Get());
+	}
+}
+
+void ASTUGameModeBase::ResetOnePlayer(AController* Controller)
+{
+	if(Controller && Controller->GetPawn())
+	{
+		Controller->GetPawn()->Reset();	
+	}
+	
+	RestartPlayer(Controller);
+}
+
+void ASTUGameModeBase::CreateTeamsInfo()
+{
+	if(!GetWorld()) return;
+
+	int32 TeamID = 1;
+	for(auto It = GetWorld()->GetControllerIterator(); It; ++It)
+	{
+		const auto Controller = It->Get();
+		if(!Controller) continue;
+
+		const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState);
+		if(!PlayerState) continue;
+
+		PlayerState->SetTeamID(TeamID);
+		PlayerState->SetTeamColor(DetermineColorByTeamID(TeamID));
+
+		TeamID = TeamID == 1 ? 2 : 1;
+		
+	}
+}
+
+FLinearColor ASTUGameModeBase::DetermineColorByTeamID(int32 TeamID) const
+{
+	if(TeamID -1 < GameData.TeamColors.Num())
+	{
+		return GameData.TeamColors[TeamID - 1];
+	}
+
+	UE_LOG(LogSTUGameModeBase, Warning, TEXT("No color for team id: %i, set  to default: %s"), TeamID, *GameData.DefaultTeamColor.ToString());
+}
+
+void ASTUGameModeBase::SetPlayerColor(AController* Controller)
+{
+	
 }
 
