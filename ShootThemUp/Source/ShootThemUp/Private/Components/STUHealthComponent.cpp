@@ -2,6 +2,8 @@
 
 
 #include "Components/STUHealthComponent.h"
+
+#include "STUUtils.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Controller.h"

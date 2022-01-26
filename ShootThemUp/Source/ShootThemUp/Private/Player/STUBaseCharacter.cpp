@@ -81,6 +81,14 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Reload",IE_Pressed,WeaponComponent,&USTUWeaponComponent::Reload);
 }
 
+void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color)
+{
+	const auto MaterialInst = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
+	if(!MaterialInst) return;
+
+	MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
+}
+
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
 	IsMovingForward = Amount > 0.0f;
