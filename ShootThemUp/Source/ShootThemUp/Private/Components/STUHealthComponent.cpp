@@ -10,6 +10,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Camera/CameraShake.h"
+#include "STUGameModeBase.h"
+#include "Particles/Collision/ParticleModuleCollisionGPU.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
@@ -51,6 +53,7 @@ void USTUHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, con
 	
 	if(IsDead())
 	{
+		Killed(InstigatedBy);
 		OnDeath.Broadcast();
 	}
 	else if (AutoHeal)
@@ -105,4 +108,17 @@ void USTUHealthComponent::PlayCameraShake()
 	if(!Controller || !Controller->PlayerCameraManager) return;
 
 	Controller->PlayerCameraManager->StartCameraShake(CameraShake);
+}
+
+void USTUHealthComponent::Killed(AController* KillerController)
+{
+	if(!GetWorld()) return;
+	
+	const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+	if(!GameMode) return;
+
+	const auto Player = Cast<APawn>(GetOwner());
+	const auto VictimController = Player ? Player->Controller: nullptr;
+
+	GameMode->Killed(KillerController, VictimController);
 }

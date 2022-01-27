@@ -82,16 +82,6 @@ bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
 	return true;
 }
 
-
-APlayerController* ASTUBaseWeapon::GetPlayerController() const
-{
-	
-	const auto Player = Cast<ACharacter>(GetOwner());
-	if(!Player) return nullptr;
-
-	return Player->GetController<APlayerController>();
-}
-
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
 
@@ -100,7 +90,7 @@ bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRot
 	
 	if(STUCharacter->IsPlayerControlled())
 	{
-		const auto Controller = GetPlayerController();
+		const auto Controller = STUCharacter->GetController<APlayerController>();
 		if(!Controller) return false;
 	
 		Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
@@ -133,7 +123,7 @@ bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 	return true;
 }
 
-void  ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd)
+void  ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const
 {
 	if(!GetWorld()) return;
 	
@@ -144,7 +134,7 @@ void  ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, 
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
 }
 
-bool ASTUBaseWeapon::GetAimAngle(FHitResult& CameraHitResult)
+bool ASTUBaseWeapon::GetAimAngle(const FHitResult& CameraHitResult) const
 {
 	const FTransform SocketTransform = WeaponMeshComponent->GetSocketTransform(MuzzleSocketName);
 	const FVector ActualTraceEnd = CameraHitResult.bBlockingHit ? CameraHitResult.ImpactPoint : CameraHitResult.TraceEnd;
@@ -216,14 +206,14 @@ bool ASTUBaseWeapon::CanReload() const
 }
 
 
-void ASTUBaseWeapon::LogAmmo()
+void ASTUBaseWeapon::LogAmmo() const
 {
 	FString AmmoInfo = "Ammo" + FString::FromInt(CurrentAmmo.Bullets) + "/";
 	AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
 	UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo)
 }
 
-UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX()
+UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX() const
 {
 	return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX,	//
 		WeaponMeshComponent,										//

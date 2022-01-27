@@ -61,17 +61,15 @@ protected:
 
 	virtual void MakeShot();
 	
-	APlayerController* GetPlayerController() const;
-
 	bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
 
 	FVector GetMuzzleWorldLocation() const;
 	
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 	
-	bool GetAimAngle(FHitResult& CameraHitResult);
+	bool GetAimAngle(const FHitResult& CameraHitResult) const;
 
-	void  MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
+	void  MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const;
 
 	void DecreaseAmmo();
 	
@@ -79,9 +77,9 @@ protected:
 
 
 
-	void LogAmmo();
+	void LogAmmo() const;
 
-	UNiagaraComponent* SpawnMuzzleFX();
+	UNiagaraComponent* SpawnMuzzleFX() const;
 	
 private:
 
