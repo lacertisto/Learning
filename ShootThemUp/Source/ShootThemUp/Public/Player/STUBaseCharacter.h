@@ -6,10 +6,7 @@
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
-class UCameraComponent;
-class USpringArmComponent;
 class USTUHealthComponent;
-class UTextRenderComponent;
 class USTUWeaponComponent;
 
 UCLASS()
@@ -21,20 +18,22 @@ public:
 	// Sets default values for this character's properties
 	ASTUBaseCharacter(const FObjectInitializer& ObjInit);
 
-protected:
+	UFUNCTION(BlueprintCallable, Category="Movement")
+	virtual bool IsRunning() const;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	USpringArmComponent* SpringArmComponent;
+	UFUNCTION(BlueprintCallable, Category="Movement")
+	float GetMovementDirection() const;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	UCameraComponent* CameraComponent;
+	// Called every frame
+    virtual void Tick(float DeltaTime) override;
+
+	void SetPlayerColor(const FLinearColor& Color);
+	
+protected:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Components")
 	USTUHealthComponent* HealthComponent;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	UTextRenderComponent* HealthTextComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,Category="Components")
 	USTUWeaponComponent* WeaponComponent;
 	
@@ -56,32 +55,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void OnDeath();
-public:	
-
-	UFUNCTION(BlueprintCallable, Category="Movement")
-		bool IsRunning() const;
-
-	UFUNCTION(BlueprintCallable, Category="Movement")
-	float GetMovementDirection() const;
-	
-	// Called every frame
-    virtual void Tick(float DeltaTime) override;
-
-    // Called to bind functionality to input
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void SetPlayerColor(const FLinearColor& Color);
 
 private:
-	bool WantsToRun = false;
-	bool IsMovingForward = false;
-	
-	void MoveForward(float Amount);
-	void MoveSideways(float Amount);
-	void OnStartRunning();
-	void OnStopRunning();
-	void OnStartFire();
-
 
 	void OnHealthChanged(float Health, float HealthDelta);
 
