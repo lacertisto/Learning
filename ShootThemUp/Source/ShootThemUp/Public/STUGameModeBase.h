@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "STUCoreTypes.h"
+#include "GameFramework/GameMode.h"
 #include "STUGameModeBase.generated.h"
 
 class AAIController;
@@ -17,6 +18,8 @@ class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 public:
 	ASTUGameModeBase();
 
+	FOnMatchStateChangedSignature OnMatchStateChanged;
+	
 	virtual void StartPlay() override;
 
 	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
@@ -39,6 +42,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
 	TSubclassOf<APawn> AIPawnClass;
 private:
+	ESTUMatchState MatchState = ESTUMatchState::WaitingToStart;
+	
 	int32 CurrentRound = 1;
 	int32 RoundCountdown = 0;
 	FTimerHandle GameRoundTimerHandle;
@@ -59,4 +64,6 @@ private:
 	void StartRespawn(AController* Controller);
 
 	void GameOver();
+
+	void SetMatchState(ESTUMatchState State);
 };
