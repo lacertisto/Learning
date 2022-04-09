@@ -31,6 +31,8 @@ public:
 	int32 GetRoundSecondsRemaining() const {return RoundCountdown;}
 
 	void RespawnRequest(AController* Controller);
+
+	virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate) override;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Game")
