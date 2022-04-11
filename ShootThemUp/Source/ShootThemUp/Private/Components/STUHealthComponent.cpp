@@ -9,7 +9,7 @@
 #include "GameFramework/Controller.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
-#include "Camera/CameraShake.h"
+#include "Camera/PlayerCameraManager.h"
 #include "STUGameModeBase.h"
 #include "Particles/Collision/ParticleModuleCollisionGPU.h"
 
