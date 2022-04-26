@@ -1,7 +1,7 @@
 // Shoot Them Up Game, All Rights Reserved
 
 
-#include "UI/STUPauseWidget.h"
+#include "STUPauseWidget.h"
 #include "GameFramework/GameModeBase.h"
 #include "Components/Button.h"
 
