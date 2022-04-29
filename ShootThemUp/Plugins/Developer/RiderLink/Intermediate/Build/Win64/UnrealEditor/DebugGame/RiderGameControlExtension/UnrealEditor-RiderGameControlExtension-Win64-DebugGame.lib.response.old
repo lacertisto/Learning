@@ -6,6 +6,6 @@
 /NAME:"UnrealEditor-RiderGameControlExtension-Win64-DebugGame.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\LEARNING\Unreal Engine\Learning\ShootThemUp\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderGameControlExtension\RiderGameControlExtension.cpp.obj"
-"C:\LEARNING\Unreal Engine\Learning\ShootThemUp\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderGameControlExtension\Default.rc2.res"
-/OUT:"C:\LEARNING\Unreal Engine\Learning\ShootThemUp\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderGameControlExtension\UnrealEditor-RiderGameControlExtension-Win64-DebugGame.lib"
+"D:\My_repo\Learning\ShootThemUp\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderGameControlExtension\RiderGameControlExtension.cpp.obj"
+"D:\My_repo\Learning\ShootThemUp\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderGameControlExtension\Default.rc2.res"
+/OUT:"D:\My_repo\Learning\ShootThemUp\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderGameControlExtension\UnrealEditor-RiderGameControlExtension-Win64-DebugGame.lib"
