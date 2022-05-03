@@ -3,10 +3,10 @@
 	"Modules": 
 	{
 		"RD": "UnrealEditor-RD-Win64-DebugGame.dll",
-		"RiderBlueprintExtension": "UnrealEditor-RiderBlueprintExtension-Win64-DebugGame.dll",
-		"RiderGameControlExtension": "UnrealEditor-RiderGameControlExtension-Win64-DebugGame.dll",
+		"RiderBlueprint": "UnrealEditor-RiderBlueprint-Win64-DebugGame.dll",
+		"RiderGameControl": "UnrealEditor-RiderGameControl-Win64-DebugGame.dll",
 		"RiderLink": "UnrealEditor-RiderLink-Win64-DebugGame.dll",
-		"RiderLoggingExtension": "UnrealEditor-RiderLoggingExtension-Win64-DebugGame.dll",
+		"RiderLogging": "UnrealEditor-RiderLogging-Win64-DebugGame.dll",
 		"RiderShaderInfoDump": "UnrealEditor-RiderShaderInfoDump-Win64-DebugGame.dll"
 	}
 }
