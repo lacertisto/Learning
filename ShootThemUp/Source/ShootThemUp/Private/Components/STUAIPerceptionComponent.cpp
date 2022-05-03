@@ -3,7 +3,7 @@
 
 #include "Components/STUAIPerceptionComponent.h"
 #include "AIController.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 #include "Components/STUHealthComponent.h"
 #include  "Perception/AISense_Sight.h"
 

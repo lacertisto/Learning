@@ -3,7 +3,7 @@
 
 #include "Pickups/STUHealthPickup.h"
 #include "Components/STUHealthComponent.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthPickup, All, All);
 

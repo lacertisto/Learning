@@ -3,7 +3,7 @@
 
 #include "AI/Decorators/STUHealthPercentDecorator.h"
 #include "AIController.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 #include "Components/STUHealthComponent.h"
 
 USTUHealthPercentDecorator::USTUHealthPercentDecorator()

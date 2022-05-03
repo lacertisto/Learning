@@ -5,7 +5,7 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/STUWeaponComponent.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 
 USTUFireService::USTUFireService()
 {

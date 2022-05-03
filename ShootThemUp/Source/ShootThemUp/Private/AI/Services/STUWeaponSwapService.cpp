@@ -4,7 +4,7 @@
 #include "AI/Services/STUWeaponSwapService.h"
 #include "AIController.h"
 #include "Components/STUWeaponComponent.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 
 USTUWeaponSwapService::USTUWeaponSwapService()
 {

@@ -3,7 +3,7 @@
 
 #include "AI/Decorators/STUAmmoExtinguishDecorator.h"
 #include "AIController.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 #include "Components/STUWeaponComponent.h"
 
 

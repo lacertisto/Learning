@@ -3,7 +3,7 @@
 
 #include "Components/STUHealthComponent.h"
 
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Controller.h"

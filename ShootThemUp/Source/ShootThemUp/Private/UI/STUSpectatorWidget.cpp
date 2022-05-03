@@ -1,7 +1,7 @@
 // Shoot Them Up Game, All Rights Reserved
 
 #include "UI/STUSpectatorWidget.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 #include "Components/STURespawnComponent.h"
 
 bool USTUSpectatorWidget::GetRespawnTime(int32& CountDownTime) const

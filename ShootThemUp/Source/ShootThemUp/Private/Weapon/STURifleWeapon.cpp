@@ -8,7 +8,7 @@
 #include "Weapon/Components/STUWeaponFXComponent.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
-#include "STUUtils.h"
+#include "STUUtils.hpp"
 
 ASTURifleWeapon::ASTURifleWeapon()
 {
