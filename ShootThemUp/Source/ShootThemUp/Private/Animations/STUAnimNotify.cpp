@@ -7,5 +7,5 @@
 void USTUAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	OnNotify.Broadcast(MeshComp);
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation,);
 }

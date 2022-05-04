@@ -21,10 +21,7 @@ USTUHealthComponent::USTUHealthComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-	
-
 }
-
 
 // Called when the game starts
 void USTUHealthComponent::BeginPlay()
@@ -47,6 +44,15 @@ void USTUHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, con
 	, AController* InstigatedBy, AActor* DamageCauser)
 {
 	if(Damage <=0.0f || IsDead() || !GetWorld()) return;
+
+	if(InstigatedBy)
+	{
+		const auto Player = Cast<APawn>(GetOwner());
+		if(!Player) return;
+
+		if(!STUUtils::AreEnemies(Player->Controller,InstigatedBy)) return;
+	}
+
 	
 	SetHealth(Health - Damage);
 	GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
