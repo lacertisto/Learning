@@ -48,7 +48,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Health Regen", meta = (EditCondition = "AutoHeal"))
 	float HealAmount = 5.0f;
-
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="VFX")
 	TSubclassOf<UCameraShakeBase> CameraShake;
 	
