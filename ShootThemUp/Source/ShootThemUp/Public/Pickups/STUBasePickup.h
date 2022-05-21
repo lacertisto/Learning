@@ -7,6 +7,7 @@
 #include "STUBasePickup.generated.h"
 
 class USphereComponent;
+class USoundCue;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBasePickup : public AActor
@@ -30,6 +31,9 @@ protected:
 
 	UPROPERTY()
 	TArray<APawn*> OverlappingPawns;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Sound")
+	USoundCue* PickupSound;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -8,6 +8,7 @@
 #include "STULauncherWeapon.generated.h"
 
 class ASTUProjectile;
+class USoundCue;
 /**
  * 
  */
@@ -22,6 +23,10 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	TSubclassOf<ASTUProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Sounds")
+	USoundCue* NoAmmoSound;
+	
 	virtual void MakeShot() override;
 	
 };

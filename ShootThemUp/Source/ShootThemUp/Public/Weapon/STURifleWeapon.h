@@ -11,6 +11,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
 class USTUWeaponFXComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
+class UAudioComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUBaseWeapon
@@ -54,8 +55,11 @@ private:
 	UPROPERTY()
 	UNiagaraComponent* MuzzleFXComponent;
 
-	void InitMuzzleFX();
-	void SetMuzzleFXVisibility(bool Visible);
+	UPROPERTY()
+	UAudioComponent* FireAudioComponent;
+	
+	void InitFX();
+	void SetFXActive(bool bIsActive);
 	void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
 	AController* GetController() const;
 };

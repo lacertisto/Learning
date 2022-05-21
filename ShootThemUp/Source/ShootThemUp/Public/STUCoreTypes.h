@@ -51,7 +51,8 @@ DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float);
 
 //VFX Struct types
-class UNiagaraSystem;;
+class UNiagaraSystem;
+class USoundCue;
 
 USTRUCT(BlueprintType)
 struct FDecalData
@@ -81,6 +82,9 @@ struct FImpactData
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="VFX")
 	FDecalData DecalData;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category="Sound")
+	USoundCue* Sound;
 };
 USTRUCT(BlueprintType)
 struct FGameData

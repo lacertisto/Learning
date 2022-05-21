@@ -9,6 +9,7 @@
 #include "Components/HorizontalBox.h"
 #include "Math/BasicMathExpressionEvaluator.h"
 #include "Menu/UI/STULevelItemWidget.h"
+#include "Sound/SoundCue.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameMenuWidget, All, All);
 
@@ -29,12 +30,19 @@ void USTUMenuWidget::NativeOnInitialized()
 	InitLevelItems();
 }
 
+void USTUMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+{
+	if(Animation != HideAnimation) return;
+	const auto STUGameInstance = GetStuGameInstance();
+    	if(!STUGameInstance) return;
+    	
+    	UGameplayStatics::OpenLevel(this, STUGameInstance->GetStartupLevel().LevelName);
+}
+
 void USTUMenuWidget::OnStartGame()
 {
-	const auto STUGameInstance = GetStuGameInstance();
-	if(!STUGameInstance) return;
-	
-	UGameplayStatics::OpenLevel(this, STUGameInstance->GetStartupLevel().LevelName);
+	PlayAnimation(HideAnimation);
+	UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 }
 
 void USTUMenuWidget::OnQuitGame()
