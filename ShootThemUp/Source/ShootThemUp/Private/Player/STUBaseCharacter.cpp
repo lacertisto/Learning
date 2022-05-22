@@ -53,6 +53,20 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 
 }
 
+void ASTUBaseCharacter::TurnOff()
+{
+	WeaponComponent->StopFire();
+	WeaponComponent->Zoom(false);
+	Super::TurnOff();
+}
+
+void ASTUBaseCharacter::Reset()
+{
+	WeaponComponent->StopFire();
+ 	WeaponComponent->Zoom(false);
+	Super::Reset();
+}
+
 void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color)
 {
 	const auto MaterialInst = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
@@ -81,6 +95,7 @@ void ASTUBaseCharacter::OnDeath()
 	SetLifeSpan(LifeSpanOnDeath);
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	WeaponComponent->StopFire();
+	WeaponComponent->Zoom(false);
 
 	//simulate ragdoll physics for more realistic death animation
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);

@@ -60,7 +60,9 @@ void ASTURifleWeapon::MakeShot()
 		
 		if (Target != nullptr)
 		{
-			Target->TakeDamage(DamageAmount,FDamageEvent(),GetController(),this);
+			FPointDamageEvent PointDamageEvent;
+			PointDamageEvent.HitInfo = HitResult;
+			Target->TakeDamage(DamageAmount,PointDamageEvent,GetController(),this);
 		}
 		WeaponFXComponent->PlayImpactFX(HitResult);
 	}
@@ -79,6 +81,19 @@ void ASTURifleWeapon::StopFire()
 {
 	GetWorldTimerManager().ClearTimer(ShotTimerHandle);
 	SetFXActive(false);
+}
+
+void ASTURifleWeapon::Zoom(bool bIsEnabled)
+{
+	const auto Controller = Cast<APlayerController>(GetController());
+	if(!Controller || !Controller->PlayerCameraManager) return;
+
+	if(bIsEnabled)
+	{
+		DefaultCameraFOV = Controller->PlayerCameraManager->GetFOVAngle();
+	}
+	
+	Controller->PlayerCameraManager->SetFOV(bIsEnabled ? FOVZoomAngle : DefaultCameraFOV);
 }
 
 bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const

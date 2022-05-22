@@ -40,6 +40,7 @@ void ASTUPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("PauseGame",IE_Pressed,this,&ASTUPlayerController::OnPauseGame);
 	InputComponent->BindAction("Mute", IE_Pressed,this,&ASTUPlayerController::OnMuteSound);
+	
 }
 
 void ASTUPlayerController::OnPauseGame()

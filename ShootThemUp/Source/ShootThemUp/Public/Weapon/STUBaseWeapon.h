@@ -35,15 +35,17 @@ public:
 	bool TryToAddAmmo(int32 ClipsAmount);
 	bool IsAmmoEmpty() const;
 	bool IsAmmoFull() const;
+
+	virtual void Zoom(bool bIsEnabled) {};
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= "Components")
 	USkeletalMeshComponent* WeaponMeshComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	FName MuzzleSocketName = "MuzzleSocket";
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
 	float TraceMaxDistance = 1500.0f;
 
 	UPROPERTY(EditDefaultsOnly)
