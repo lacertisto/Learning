@@ -3,6 +3,8 @@
 
 #include "MovingPlatform.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogMovingPlatform, All,All);
+
 // Sets default values
 AMovingPlatform::AMovingPlatform()
 {
@@ -15,7 +17,39 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
-	SetActorLocation(MyVector);
+	StartPosition = GetActorLocation();
+}
+
+void AMovingPlatform::MovePlatform(float DeltaTime)
+{
+	
+	FVector CurrentLocation = GetActorLocation();
+	CurrentLocation = CurrentLocation + PlatformVelocity*DeltaTime;	
+	SetActorLocation(CurrentLocation);
+	
+	float Distance = FVector::Dist(StartPosition, CurrentLocation);
+    	if(ShouldPlatformReturn(CurrentLocation))
+    	{
+    		FVector MoveDirection = PlatformVelocity.GetSafeNormal();
+    		StartPosition = StartPosition + MoveDirection * MoveDistance;
+    		SetActorLocation(StartPosition);
+    		PlatformVelocity = -PlatformVelocity;
+    	}
+    
+    	UE_LOG(LogMovingPlatform, Warning, TEXT("Platform %s overshoot for: %f"),*GetActorNameOrLabel(),Distance - MoveDistance);
+}
+
+void AMovingPlatform::RotatePlatform(float DeltaTime)
+{
+	FRotator CurrentRotation = GetActorRotation();
+	CurrentRotation = CurrentRotation + PlatformRotation * DeltaTime;
+	SetActorRotation(CurrentRotation);
+}
+
+bool AMovingPlatform::ShouldPlatformReturn(FVector CurrentLocation) const
+{
+	float Distance = FVector::Dist(StartPosition, CurrentLocation);
+	return Distance > MoveDistance;	
 }
 
 // Called every frame
@@ -23,10 +57,8 @@ void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector LocalVector = MyVector;
-
-	MyVector.Y = MyVector.Y + 1;
-
-	SetActorLocation(LocalVector);
+	MovePlatform(DeltaTime);
+	
+	RotatePlatform(DeltaTime);
 }
 
