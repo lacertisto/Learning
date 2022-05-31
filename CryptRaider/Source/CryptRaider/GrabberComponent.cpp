@@ -26,18 +26,6 @@ void UGrabberComponent::BeginPlay()
 	
 }
 
-void UGrabberComponent::PrintDamage(const float& Damage)
-{
-	UE_LOG(LogTemp,Warning,TEXT("%f"),Damage)
-}
-
-bool UGrabberComponent::HasDamage(float& OutDamage)
-{
-	OutDamage = 5;
-	return true;
-}
-
-
 // Called every frame
 void UGrabberComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -48,7 +36,16 @@ void UGrabberComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	
 	DrawDebugLine(GetWorld(),Start, End, FColor::Red);
 
-	float Damage;
-	if(HasDamage(Damage)) PrintDamage(Damage);
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
+	FHitResult HitResult;
+	bool HasHit = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		FQuat::Identity,
+		ECC_GameTraceChannel2,
+		Sphere);
+
+	if(HasHit) HitResult.GetActor()->GetActorNameOrLabel();
 }
 
