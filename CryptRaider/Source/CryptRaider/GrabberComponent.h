@@ -16,7 +16,12 @@ public:
 	// Sets default values for this component's properties
 	UGrabberComponent();
 
-public:	
+	UFUNCTION(BlueprintCallable)
+	void Grab();
+
+	UFUNCTION(BlueprintCallable)
+	void Release();
+	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -30,4 +35,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float GrabRadius = 100;
+
+
 };

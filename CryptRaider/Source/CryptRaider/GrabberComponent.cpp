@@ -2,9 +2,9 @@
 
 
 #include "GrabberComponent.h"
-
-#include <string>
-
+#include "Engine/World.h"
+#include "DrawDebugHelpers.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 // Sets default values for this component's properties
 UGrabberComponent::UGrabberComponent()
@@ -16,36 +16,50 @@ UGrabberComponent::UGrabberComponent()
 	// ...
 }
 
+void UGrabberComponent::Grab()
+{
+	FVector Start = GetComponentLocation();
+    	FVector End = Start + GetForwardVector()*MaxGrabDistance;
+    	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
+		DrawDebugSphere(GetWorld(), End, 10, 10, FColor::Blue,false,5.0f);
+    
+    	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
+    	FHitResult HitResult;
+    	bool HasHit = GetWorld()->SweepSingleByChannel(HitResult,Start,End,FQuat::Identity,ECC_GameTraceChannel2,Sphere);
+		DrawDebugSphere(GetWorld(),HitResult.ImpactPoint,10,10,FColor::Yellow,false,5.0f);
+    	if(HasHit)
+    	{
+    		AActor* ActorHit = HitResult.GetActor();
+    		
+    		UE_LOG(LogTemp,Warning,TEXT("Actor hit: %s"),*ActorHit->GetActorNameOrLabel());
+    	}
+    	else
+    	{
+    		UE_LOG(LogTemp,Warning,TEXT("No Actor was hit!"));
+    	}
+}
+
+void UGrabberComponent::Release()
+{
+	UE_LOG(LogTemp,Warning,TEXT("Grabber Released!"))
+}
+
 
 // Called when the game starts
 void UGrabberComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	UPhysicsHandleComponent* PhysicsHandleComponent = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if(PhysicsHandleComponent)
+	{
+		UE_LOG(LogTemp,Display,TEXT("ComponentName: %s"),*PhysicsHandleComponent->GetName());
+	}
 }
 
 // Called every frame
 void UGrabberComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	FVector Start = GetComponentLocation();
-	FVector End = Start + GetForwardVector() * MaxGrabDistance;
-	
-	DrawDebugLine(GetWorld(),Start, End, FColor::Red);
-
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
-	FHitResult HitResult;
-	bool HasHit = GetWorld()->SweepSingleByChannel(
-		HitResult,
-		Start,
-		End,
-		FQuat::Identity,
-		ECC_GameTraceChannel2,
-		Sphere);
-
-	if(HasHit) HitResult.GetActor()->GetActorNameOrLabel();
 }
 
