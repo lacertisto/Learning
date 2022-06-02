@@ -4,6 +4,7 @@
 #include "GrabberComponent.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 
 // Sets default values for this component's properties
@@ -18,6 +19,8 @@ UGrabberComponent::UGrabberComponent()
 
 void UGrabberComponent::Grab()
 {
+	UPhysicsHandleComponent* PhysicsHandleComponent = GetPhysicsHandleComponent();
+	if(!PhysicsHandleComponent) return;
 	FVector Start = GetComponentLocation();
     	FVector End = Start + GetForwardVector()*MaxGrabDistance;
     	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
@@ -29,19 +32,23 @@ void UGrabberComponent::Grab()
 		DrawDebugSphere(GetWorld(),HitResult.ImpactPoint,10,10,FColor::Yellow,false,5.0f);
     	if(HasHit)
     	{
-    		AActor* ActorHit = HitResult.GetActor();
-    		
-    		UE_LOG(LogTemp,Warning,TEXT("Actor hit: %s"),*ActorHit->GetActorNameOrLabel());
-    	}
-    	else
-    	{
-    		UE_LOG(LogTemp,Warning,TEXT("No Actor was hit!"));
+    		HitResult.GetComponent()->WakeAllRigidBodies();
+    		PhysicsHandleComponent->GrabComponentAtLocationWithRotation(
+    			HitResult.GetComponent(),
+    			NAME_None,
+    			HitResult.ImpactPoint,
+    			GetComponentRotation());
     	}
 }
 
 void UGrabberComponent::Release()
 {
-	UE_LOG(LogTemp,Warning,TEXT("Grabber Released!"))
+	UPhysicsHandleComponent* PhysComponent = GetPhysicsHandleComponent();
+	if(!PhysComponent) return;
+	if(PhysComponent->GetGrabbedComponent())
+	{
+		PhysComponent->ReleaseComponent();
+	}
 }
 
 
@@ -50,16 +57,25 @@ void UGrabberComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UPhysicsHandleComponent* PhysicsHandleComponent = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if(PhysicsHandleComponent)
-	{
-		UE_LOG(LogTemp,Display,TEXT("ComponentName: %s"),*PhysicsHandleComponent->GetName());
-	}
+
+}
+
+UPhysicsHandleComponent* UGrabberComponent::GetPhysicsHandleComponent() const
+{
+	return GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 }
 
 // Called every frame
 void UGrabberComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
+	if(!GetPhysicsHandleComponent()) return;
+	if(GetPhysicsHandleComponent()->GetGrabbedComponent())
+	{
+		FVector TargetLocation = GetComponentLocation() + GetForwardVector().GetSafeNormal()*HoldDistance;
+		GetPhysicsHandleComponent()->SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
+	}
+
 }
 
