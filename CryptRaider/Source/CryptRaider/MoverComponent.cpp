@@ -14,6 +14,11 @@ UMoverComponent::UMoverComponent()
 	// ...
 }
 
+void UMoverComponent::SetShouldMove(bool ShouldMove)
+{
+	IsShouldMove = ShouldMove;
+}
+
 
 // Called when the game starts
 void UMoverComponent::BeginPlay()
@@ -29,14 +34,16 @@ void UMoverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FVector CurrentLocation = GetOwner()->GetActorLocation();
-	FVector TargetLocation = OriginalLocation + MoveOffset;
-	float Speed = FVector::Distance(OriginalLocation,TargetLocation) / MoveTime;
+	FVector TargetLocation = OriginalLocation;
 
 	if(IsShouldMove)
 	{
-		FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation,TargetLocation,DeltaTime,Speed);
-    	GetOwner()->SetActorLocation(NewLocation);	
+		TargetLocation = OriginalLocation + MoveOffset;
 	}
+	
+	FVector CurrentLocation = GetOwner()->GetActorLocation();
+	float Speed = MoveOffset.Length() / MoveTime;
+	FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation,TargetLocation,DeltaTime,Speed);
+	GetOwner()->SetActorLocation(NewLocation);
 }
 

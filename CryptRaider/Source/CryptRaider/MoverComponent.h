@@ -16,6 +16,8 @@ public:
 	// Sets default values for this component's properties
 	UMoverComponent();
 
+	void SetShouldMove(bool ShouldMove);
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
