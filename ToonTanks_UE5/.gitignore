@@ -83,6 +83,7 @@ Plugins/*/Binaries/*
 # Builds
 Build/*
 
+Plugins/Developer/RiderLink
 #Exclude ExternalContent
 #Content/Animations/*
 #Content/Characters/*
