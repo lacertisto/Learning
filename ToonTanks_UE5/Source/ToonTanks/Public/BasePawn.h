@@ -27,16 +27,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-private:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	UCapsuleComponent* CapsuleComponent;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	UStaticMeshComponent* BaseMesh;
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	UStaticMeshComponent* TurretMesh;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
+private:
+
 };
