@@ -22,3 +22,18 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void ATank::Move(float Move)
+{
+	UE_LOG(LogTemp,Warning,TEXT("Val: %f"), Move);
+}
+
+// Called to bind functionality to input
+void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
+
+}
+
