@@ -29,11 +29,21 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UCameraComponent* CameraComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Movement")
+	float Speed = 100.f;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Rotation")
+	float TurnRate = 45.f;
 	
 	virtual void BeginPlay() override;
 	
 private:
 
 	void Move(float Move);
+
+	void Rotate(float Rotation);
+
+	APlayerController* PlayerController;
 	
 };
