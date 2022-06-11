@@ -31,6 +31,12 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
+
+	void RotateTurret(FVector TargetLocation);
+
+	void Fire();
 private:
 
+	UPROPERTY(EditDefaultsOnly, Category="Combat")
+	TSubclassOf<class AProjectile> ProjectileClass;
 };

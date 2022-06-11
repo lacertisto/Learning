@@ -2,6 +2,7 @@
 
 
 #include "BasePawn.h"
+#include "Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 
@@ -20,4 +21,17 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("Projectile Spawn Point");
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 	
+}
+
+void ABasePawn::RotateTurret(FVector TargetLocation)
+{
+	FVector ToTarget = TargetLocation - TurretMesh->GetComponentLocation();
+	FRotator Rotation = FRotator(0.f,ToTarget.Rotation().Yaw,0.f);
+	TurretMesh->SetWorldRotation(Rotation);
+}
+
+void ABasePawn::Fire()
+{
+	// DrawDebugSphere(GetWorld(),ProjectileSpawnPoint->GetComponentLocation(),6,12,FColor::Red,false,5.f);
+	GetWorld()->SpawnActor<AProjectile>(ProjectileClass,ProjectileSpawnPoint->GetComponentLocation(),ProjectileSpawnPoint->GetComponentRotation());
 }
