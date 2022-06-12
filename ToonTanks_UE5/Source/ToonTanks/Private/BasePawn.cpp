@@ -2,6 +2,8 @@
 
 
 #include "BasePawn.h"
+
+#include "HealthComponent.h"
 #include "Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -20,6 +22,12 @@ ABasePawn::ABasePawn()
 	TurretMesh->SetupAttachment(BaseMesh);
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>("Projectile Spawn Point");
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
+}
+
+void ABasePawn::HandleDestruction()
+{
+	//TODO: Visual/sound effects handle
 	
 }
 
@@ -33,5 +41,6 @@ void ABasePawn::RotateTurret(FVector TargetLocation)
 void ABasePawn::Fire()
 {
 	// DrawDebugSphere(GetWorld(),ProjectileSpawnPoint->GetComponentLocation(),6,12,FColor::Red,false,5.f);
-	GetWorld()->SpawnActor<AProjectile>(ProjectileClass,ProjectileSpawnPoint->GetComponentLocation(),ProjectileSpawnPoint->GetComponentRotation());
+	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass,ProjectileSpawnPoint->GetComponentLocation(),ProjectileSpawnPoint->GetComponentRotation());
+	Projectile->SetOwner(this);
 }

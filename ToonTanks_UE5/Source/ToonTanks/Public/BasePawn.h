@@ -8,6 +8,7 @@
 
 class UCapsuleComponent;
 class UStaticMeshComponent;
+class UHealthComponent;
 
 UCLASS()
 class TOONTANKS_API ABasePawn : public APawn
@@ -17,6 +18,8 @@ class TOONTANKS_API ABasePawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ABasePawn();
+
+	virtual void HandleDestruction();
 
 protected:
 
@@ -32,6 +35,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
 
+	UPROPERTY(BlueprintReadWrite,VisibleAnywhere, Category="Health")
+	UHealthComponent* HealthComponent;
+	
 	void RotateTurret(FVector TargetLocation);
 
 	void Fire();

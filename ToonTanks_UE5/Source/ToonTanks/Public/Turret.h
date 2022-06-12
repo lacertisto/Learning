@@ -20,6 +20,8 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void HandleDestruction() override;
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Range")
@@ -39,5 +41,5 @@ private:
 	FTimerHandle FireTimerTimerHandle;
 	float FireRate = 2.f;
 	void CheckFireConditions();
-
+	FRotator CurrentRotation = FRotator(0.f);
 };

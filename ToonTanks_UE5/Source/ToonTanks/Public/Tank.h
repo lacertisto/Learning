@@ -21,6 +21,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void HandleDestruction() override;
+
+	APlayerController* GetTankController() const {return PlayerController;}
 	
 protected:
 

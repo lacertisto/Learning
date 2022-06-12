@@ -24,7 +24,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* ProjectileMovement;
-	
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Damage")
+	float Damage = 25.f;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -32,4 +34,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, //Source Component 
+		AActor* OtherActor, //Hitted Actor that owns other component
+		UPrimitiveComponent* OtherComponent, //Component to be hit
+		FVector NormalImpulse, //handle for physics system
+		const FHitResult& Hit);  //data to write hit events
 };
