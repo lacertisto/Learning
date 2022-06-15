@@ -3,6 +3,7 @@
 
 #include "TanksGameMode.h"
 #include "Tank.h"
+#include "TanksPlayerController.h"
 #include "Turret.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,10 +17,9 @@ void ATanksGameMode::ActorDied(AActor* DeadActor)
 	if(DeadActor == Tank)
 	{
 		Tank->HandleDestruction();
-		if(Tank->GetTankController())
+		if(TanksPlayerController)
 		{
-			Tank->DisableInput(Tank->GetTankController());
-			Tank->GetTankController()->bShowMouseCursor = false;
+			TanksPlayerController->SetPlayerEnabled(false);
 		}
 	}
 	else if (ATurret* DestroyedTurret = Cast<ATurret>(DeadActor))
@@ -31,5 +31,22 @@ void ATanksGameMode::ActorDied(AActor* DeadActor)
 void ATanksGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	HandleGameStart();
+}
+
+void ATanksGameMode::HandleGameStart()
+{
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
+	TanksPlayerController = Cast<ATanksPlayerController>(UGameplayStatics::GetPlayerController(this,0));
+
+	StartGame();
+	
+	if(TanksPlayerController)
+	{
+		TanksPlayerController->SetPlayerEnabled(false);
+
+		FTimerHandle PlayerEnableTimerhandle;
+		FTimerDelegate PlayerEnabledTimerDelegate = FTimerDelegate::CreateUObject(TanksPlayerController,&ATanksPlayerController::SetPlayerEnabled,true);
+		GetWorldTimerManager().SetTimer(PlayerEnableTimerhandle,PlayerEnabledTimerDelegate, StartDelay,false);
+	}
 }
