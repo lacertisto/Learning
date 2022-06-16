@@ -20,11 +20,17 @@ void ATanksGameMode::ActorDied(AActor* DeadActor)
 		if(TanksPlayerController)
 		{
 			TanksPlayerController->SetPlayerEnabled(false);
+			GameOver(false);
 		}
 	}
 	else if (ATurret* DestroyedTurret = Cast<ATurret>(DeadActor))
 	{
 		DestroyedTurret->HandleDestruction();
+		TargetTowers--;
+		if (TargetTowers == 0)
+		{
+			GameOver(true);
+		}
 	}
 }
 
@@ -36,6 +42,7 @@ void ATanksGameMode::BeginPlay()
 
 void ATanksGameMode::HandleGameStart()
 {
+	TargetTowers = GetTargetTowers();
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 	TanksPlayerController = Cast<ATanksPlayerController>(UGameplayStatics::GetPlayerController(this,0));
 
@@ -49,4 +56,11 @@ void ATanksGameMode::HandleGameStart()
 		FTimerDelegate PlayerEnabledTimerDelegate = FTimerDelegate::CreateUObject(TanksPlayerController,&ATanksPlayerController::SetPlayerEnabled,true);
 		GetWorldTimerManager().SetTimer(PlayerEnableTimerhandle,PlayerEnabledTimerDelegate, StartDelay,false);
 	}
+}
+
+int32 ATanksGameMode::GetTargetTowers() const
+{
+	TArray<AActor*> TurretActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(),ATurret::StaticClass(),TurretActors);
+	return TurretActors.Num();
 }

@@ -36,7 +36,7 @@ void UHealthComponent::DamageTaken(AActor* DamagedActor, float Damage, const UDa
 	
 	Health -= Damage;
 
-	if(Health <= 0.f && DamagedActor && TanksGameMode)
+	if(Health <= 0.f && TanksGameMode)
 	{
 		TanksGameMode->ActorDied(DamagedActor);
 	}

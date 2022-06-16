@@ -25,11 +25,26 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* ProjectileMovement;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Damage")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Combat")
 	float Damage = 25.f;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, Category="Combat")
+	UParticleSystem* HitParticles;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UParticleSystemComponent* ProjectileTrail;
+
+	UPROPERTY(EditAnywhere,Category="Combat")
+	USoundBase* LaunchSound;
+
+	UPROPERTY(EditAnywhere,Category="Combat")
+	USoundBase* HitSound;
+	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Combat")
+	TSubclassOf<UCameraShakeBase> HitCameraShakeClass;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

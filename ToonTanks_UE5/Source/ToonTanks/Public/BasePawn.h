@@ -37,6 +37,15 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite,VisibleAnywhere, Category="Health")
 	UHealthComponent* HealthComponent;
+
+	UPROPERTY(EditAnywhere,Category="Combat")
+	UParticleSystem* DeathParticle;
+
+	UPROPERTY(EditAnywhere,Category="Combat")
+	USoundBase* DeathSound;
+	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Combat")
+	TSubclassOf<UCameraShakeBase> DeathCameraShake;
 	
 	void RotateTurret(FVector TargetLocation);
 

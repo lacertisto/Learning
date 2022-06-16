@@ -39,6 +39,8 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Rotation")
 	float TurnRate = 45.f;
+
+
 	
 	virtual void BeginPlay() override;
 	
