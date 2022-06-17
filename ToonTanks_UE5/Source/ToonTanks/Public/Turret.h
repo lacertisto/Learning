@@ -42,4 +42,6 @@ private:
 	float FireRate = 2.f;
 	void CheckFireConditions();
 	FRotator CurrentRotation = FRotator(0.f);
+
+	bool bAlive = true;
 };

@@ -33,7 +33,7 @@ void ATank::Tick(float DeltaSeconds)
 void ATank::HandleDestruction()
 {
 	Super::HandleDestruction();
-	
+	bAlive = false;	
 }
 
 void ATank::BeginPlay()

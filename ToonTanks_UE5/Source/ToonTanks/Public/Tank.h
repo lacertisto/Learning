@@ -25,6 +25,8 @@ public:
 	virtual void HandleDestruction() override;
 
 	APlayerController* GetTankController() const {return PlayerController;}
+
+	bool bAlive = true;
 	
 protected:
 

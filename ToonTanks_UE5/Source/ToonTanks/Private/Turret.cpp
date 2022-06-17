@@ -20,13 +20,7 @@ void ATurret::Tick(float DeltaSeconds)
 	}
 	else
 	{
-		//make turret rotate in 180 degrees
-		//get current rotation
-		//continue adding degrees while 180 is not reached
-		//invert movement for the same amount
-		// CurrentRotation.Yaw += 1 * DeltaSeconds * RotationRate;
-		// UE_LOG(LogTemp,Warning,TEXT("Rotation^ %s"),*CurrentRotation.ToString());
-		// TurretMesh->AddLocalRotation(CurrentRotation);
+
 	}
 	
 }
@@ -34,6 +28,7 @@ void ATurret::Tick(float DeltaSeconds)
 void ATurret::HandleDestruction()
 {
 	Super::HandleDestruction();
+	bAlive = false;
 }
 
 
@@ -47,7 +42,7 @@ void ATurret::BeginPlay()
 
 bool ATurret::IsInFireRange()
 {
-	if(Target)
+	if(Target && Target->bAlive == true)
 	{
 		float Distance = FVector::Dist(GetActorLocation(), Target->GetActorLocation());
 		if(Distance <= FireRange)
@@ -61,7 +56,7 @@ bool ATurret::IsInFireRange()
 
 void ATurret::CheckFireConditions()
 {
-	if(IsInFireRange())
+	if(IsInFireRange() && bAlive == true)
 	{
 		Fire();
 	}
