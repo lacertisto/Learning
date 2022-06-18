@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "SSBaseCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class SIMPLESHOOTER_API ASSBaseCharacter : public ACharacter
 {
@@ -15,15 +18,30 @@ public:
 	// Sets default values for this character's properties
 	ASSBaseCharacter();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	USpringArmComponent* SpringArmComponent;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UCameraComponent* CameraComponent;
+	
+private:
+	void Strafe(float Scale);
+	void Move(float Scale);
+	void LookUp(float Scale);
+	void LookRight(float X);
+	
+	UPROPERTY(EditAnywhere)
+	float RotationRate = 10;
+	
+	
 };
