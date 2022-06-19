@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class ASSBaseWeapon;
 
 UCLASS()
 class SIMPLESHOOTER_API ASSBaseCharacter : public ACharacter
@@ -33,12 +34,19 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UCameraComponent* CameraComponent;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
+	TSubclassOf<ASSBaseWeapon> WeaponClass;
+
+	UPROPERTY()
+	ASSBaseWeapon* Weapon;
 	
 private:
 	void Strafe(float Scale);
 	void Move(float Scale);
 	void LookUp(float Scale);
 	void LookRight(float X);
+	void Shoot();
 	
 	UPROPERTY(EditAnywhere)
 	float RotationRate = 10;

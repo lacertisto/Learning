@@ -2,6 +2,8 @@
 
 
 #include "SSBaseCharacter.h"
+
+#include "SSBaseWeapon.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
@@ -22,7 +24,13 @@ ASSBaseCharacter::ASSBaseCharacter()
 void ASSBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	Weapon = GetWorld()->SpawnActor<ASSBaseWeapon>(WeaponClass);
+	//hide the previous weapon
+	GetMesh()->HideBoneByName(TEXT("weapon_r"),EPhysBodyOp::PBO_None);
+	//Attaching weapon to the socket of the character
+	Weapon->AttachToComponent(GetMesh(),FAttachmentTransformRules::KeepRelativeTransform,TEXT("WeaponSocket"));
+	Weapon->SetOwner(this);
 }
 
 void ASSBaseCharacter::Strafe(float Scale)
@@ -49,6 +57,11 @@ void ASSBaseCharacter::LookRight(float X)
 	AddControllerYawInput(X * RotationRate * GetWorld()->GetDeltaSeconds());
 }
 
+void ASSBaseCharacter::Shoot()
+{
+	Weapon->Fire();
+}
+
 // Called every frame
 void ASSBaseCharacter::Tick(float DeltaTime)
 {
@@ -68,5 +81,6 @@ void ASSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(TEXT("LookUpRate"),this,&ASSBaseCharacter::LookUp);
 	PlayerInputComponent->BindAxis(TEXT("LookRightRate"),this,&ASSBaseCharacter::LookRight);
 	PlayerInputComponent->BindAction(TEXT("Jump"),IE_Pressed,this,&ASSBaseCharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Fire"),IE_Pressed,this,&ASSBaseCharacter::Shoot);
 }
 
