@@ -28,7 +28,17 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* MeshComponent;
 
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UParticleSystem* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* HitFlash;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ShootRange = 1000.f;
+
+	UPROPERTY(EditAnywhere)
+	float Damage = 15.f;
 	
 public:	
 	// Called every frame
