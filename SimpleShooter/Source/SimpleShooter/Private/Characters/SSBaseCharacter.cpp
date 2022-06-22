@@ -6,6 +6,8 @@
 #include "Weapons/SSBaseWeapon.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "SimpleShooter/SimpleShooterGameModeBase.h"
 
 // Sets default values
 ASSBaseCharacter::ASSBaseCharacter()
@@ -102,5 +104,12 @@ float ASSBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	Health -= DamageApplied;
 
 	UE_LOG(LogTemp,Warning,TEXT("Health left %f"), Health);
+	if(IsDead())
+	{
+		DetachFromControllerPendingDestroy();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>()->PawnKilled(this);
+	}
+	
 	return DamageApplied;
 }
