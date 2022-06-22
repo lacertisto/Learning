@@ -25,6 +25,8 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
 
+	void Shoot();
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -55,7 +57,7 @@ private:
 	void Move(float Scale);
 	void LookUp(float Scale);
 	void LookRight(float X);
-	void Shoot();
+
 	
 	UPROPERTY(EditAnywhere)
 	float RotationRate = 10;
