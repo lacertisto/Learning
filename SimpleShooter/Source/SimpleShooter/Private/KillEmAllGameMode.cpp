@@ -6,4 +6,10 @@
 void AKillEmAllGameMode::PawnKilled(APawn* PawnKilled)
 {
 	Super::PawnKilled(PawnKilled);
+
+	APlayerController* PlayerController = Cast<APlayerController>(PawnKilled);
+	if(!PlayerController) return;
+
+	PlayerController->GameHasEnded();
+	
 }
