@@ -7,6 +7,8 @@
 #include "SSBaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class UParticleSystem;
+class USoundCue;
 
 UCLASS()
 class SIMPLESHOOTER_API ASSBaseWeapon : public AActor
@@ -34,13 +36,21 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* HitFlash;
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
+	USoundCue* ShotSoundCue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	USoundCue* ImpactSoundCue;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ShootRange = 1000.f;
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 15.f;
 
-	
+	bool GunTrace(FHitResult& Hit, FVector& ShotDirection);
+
+	AController* GetOwnerController() const;
 	
 public:	
 	// Called every frame

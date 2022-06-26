@@ -19,6 +19,9 @@ public:
 	// Sets default values for this character's properties
 	ASSBaseCharacter();
 
+	UFUNCTION(BlueprintPure)
+	float GetHealthPercent() const;
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

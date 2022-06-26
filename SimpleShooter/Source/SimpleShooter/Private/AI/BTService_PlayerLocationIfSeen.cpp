@@ -21,11 +21,11 @@ void UBTService_PlayerLocationIfSeen::TickNode(UBehaviorTreeComponent& OwnerComp
 	if(!AIPlayer || !PlayerPawn) return;
 	if(AIPlayer->LineOfSightTo(PlayerPawn))
 	{
-		OwnerComp.GetBlackboardComponent()->SetValueAsVector(TEXT("PlayerLocation"),PlayerPawn->GetActorLocation());	
+		OwnerComp.GetBlackboardComponent()->SetValueAsObject(TEXT("Player"),PlayerPawn);	
 	}
 	else
 	{
-		OwnerComp.GetBlackboardComponent()->ClearValue(TEXT("PlayerLocation"));
+		OwnerComp.GetBlackboardComponent()->ClearValue(GetSelectedBlackboardKey());
 	}
 	
 }

@@ -2,8 +2,9 @@
 
 
 #include "AI/SSAIController.h"
-
+#include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Characters/SSBaseCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 ASSAIController::ASSAIController()
@@ -24,6 +25,14 @@ void ASSAIController::Tick(float DeltaSeconds)
 	{
 		GetBlackboardComponent()->ClearValue(TEXT("PlayerLocation"));
 	}
+}
+
+bool ASSAIController::IsDead() const
+{
+	ASSBaseCharacter* ControlledCharacter = Cast<ASSBaseCharacter>(GetPawn());
+	if(!ControlledCharacter) return true;
+
+	return ControlledCharacter->IsDead();
 }
 
 void ASSAIController::BeginPlay()

@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "SSAIController.generated.h"
 
+class UBehaviorTree;
 /**
  * 
  */
@@ -18,6 +19,7 @@ public:
 	ASSAIController();
 	
 	virtual void Tick(float DeltaSeconds) override;
+	bool IsDead() const;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -26,6 +28,4 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UBehaviorTree* AIBehaviorTree;
 	
-private:
-
 };

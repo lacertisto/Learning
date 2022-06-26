@@ -3,6 +3,7 @@
 
 #include "Characters/SSBaseCharacter.h"
 
+#include "KillEmAllGameMode.h"
 #include "Weapons/SSBaseWeapon.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -20,6 +21,11 @@ ASSBaseCharacter::ASSBaseCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->bUsePawnControlRotation = true;
+}
+
+float ASSBaseCharacter::GetHealthPercent() const
+{
+	return Health / MaxHealth;
 }
 
 // Called when the game starts or when spawned
@@ -106,9 +112,10 @@ float ASSBaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	UE_LOG(LogTemp,Warning,TEXT("Health left %f"), Health);
 	if(IsDead())
 	{
+		GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>()->PawnKilled(this);
 		DetachFromControllerPendingDestroy();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>()->PawnKilled(this);
+
 	}
 	
 	return DamageApplied;
