@@ -18,14 +18,17 @@ struct FGeometryData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,Category="Movement")
     float Amplitude = 50.f;
     
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, Category="Movement")
     float Frequency = 2.f;
     
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, Category="Movement")
     EMovementType MovementType = EMovementType::Static;
+
+	UPROPERTY(EditAnywhere, Category="Design")
+	FLinearColor MaterialColor = FLinearColor::Black;
 };
 
 
@@ -57,4 +60,6 @@ public:
 	void HandleMovement(const float &DeltaTime);
 private:
 	FVector InitialLocation;
+
+	void SetColor(const FLinearColor& Color);
 };

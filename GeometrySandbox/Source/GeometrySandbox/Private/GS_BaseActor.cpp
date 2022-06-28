@@ -2,6 +2,7 @@
 
 
 #include "GS_BaseActor.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseActor, All,All);
 
@@ -32,6 +33,8 @@ void AGS_BaseActor::BeginPlay()
 	FVector Scale = ActorTransform.GetScale3D(); // Get actors Scale
 
 	InitialLocation = GetActorLocation();
+
+	SetColor(GeometryData.MaterialColor);
 }
 
 // Called every frame
@@ -51,11 +54,20 @@ void AGS_BaseActor::HandleMovement(const float &DeltaTime)
 		case EMovementType::Sin:
 		{
 			FVector CurrentLocation = GetActorLocation();
-			CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * GetWorld()->GetTimeSeconds()) * DeltaTime;
+			CurrentLocation.Z = InitialLocation.Z + GeometryData.Amplitude * FMath::Sin(GeometryData.Frequency * GetWorld()->GetTimeSeconds());
 			SetActorLocation(CurrentLocation);
 			break;
 		}
 		case EMovementType::Static: break;
 		default: break;
 	}
+}
+
+void AGS_BaseActor::SetColor(const FLinearColor& Color)
+{
+	UMaterialInstanceDynamic* DynMaterial = StaticMesh->CreateAndSetMaterialInstanceDynamic(0);
+    	if (DynMaterial)
+    	{
+    		DynMaterial->SetVectorParameterValue("Color",Color); //FLinearColor - 32bit, FColor - 8bit
+    	}
 }
