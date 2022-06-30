@@ -3,6 +3,7 @@
 
 #include "GS_BaseActor.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "TimerManager.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseActor, All,All);
 
@@ -35,6 +36,8 @@ void AGS_BaseActor::BeginPlay()
 	InitialLocation = GetActorLocation();
 
 	SetColor(GeometryData.MaterialColor);
+
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AGS_BaseActor::OnTimerFired, GeometryData.TimerRate, true);
 }
 
 // Called every frame
@@ -70,4 +73,17 @@ void AGS_BaseActor::SetColor(const FLinearColor& Color)
     	{
     		DynMaterial->SetVectorParameterValue("Color",Color); //FLinearColor - 32bit, FColor - 8bit
     	}
+}
+
+void AGS_BaseActor::OnTimerFired()
+{
+	if(++TimerCount <= MaxTimerCount)
+	{
+		const FLinearColor NewColor = FLinearColor::MakeRandomColor();
+		SetColor(NewColor);	
+	}
+	else
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandle);
+	}
 }
