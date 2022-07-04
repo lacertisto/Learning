@@ -6,6 +6,12 @@
 #include "GameFramework/Actor.h"
 #include "GS_BaseActor.generated.h"
 
+//for dynamic delegates we need to point param names - it would be visible in blueprints
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnColorChanged, const FLinearColor&, Color, const FString&, Name);
+
+//only visible in c++ - no need to assign param name
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTimerFinished, AActor*);
+
 UENUM(BlueprintType)
 enum class EMovementType : uint8
 {
@@ -18,19 +24,19 @@ struct FGeometryData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere,Category="Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
     float Amplitude = 50.f;
     
-    UPROPERTY(EditAnywhere, Category="Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
     float Frequency = 2.f;
     
-    UPROPERTY(EditAnywhere, Category="Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
     EMovementType MovementType = EMovementType::Static;
 
-	UPROPERTY(EditAnywhere, Category="Design")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
 	FLinearColor MaterialColor = FLinearColor::Black;
 	
-	UPROPERTY(EditAnywhere, Category="Design")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Design")
 	float TimerRate = 3.0f;
 };
 
@@ -47,15 +53,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY(EditAnywhere, Category="GeometryData")
-	FGeometryData GeometryData;	
+	void SetGeometryData(FGeometryData& Data){GeometryData = Data;}
+
+	UFUNCTION(BlueprintCallable)
+	FGeometryData GetGeometryData() const {return GeometryData;}
+
+	UPROPERTY(BlueprintAssignable) //for BP delegates
+	FOnColorChanged OnColorChanged;
+
+	
+	FOnTimerFinished OnTimerFinished;
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	UPROPERTY()
 	float WeaponsNum = 4.f;
+	
+	UPROPERTY(EditAnywhere, Category="GeometryData")
+	FGeometryData GeometryData;	
 	
 public:	
 	// Called every frame
