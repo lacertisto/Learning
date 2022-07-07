@@ -52,6 +52,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Animation")
 	UAnimMontage* DeathMontage;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Damage")
+	FVector2D LandedDamageVelocity = FVector2D(900.f,1200.f);
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Damage")
+	FVector2D LandedDamage = FVector2D(10.f,100.f);
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Damage")
+	float LifeSpanOnDeath = 5.f;
+	
 	
 private:
 
@@ -65,5 +75,8 @@ private:
 	
 	void OnDeath();
 	void OnHealthChanged(float Health);
+
+	UFUNCTION()
+	void OnGroundLanded(const FHitResult& Hit);
 };
 

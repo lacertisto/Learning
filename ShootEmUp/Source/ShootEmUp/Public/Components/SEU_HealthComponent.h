@@ -6,8 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "SEU_HealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnDeath)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float)
+DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float);
 
 //tick is no need here, so it would be none here
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -19,15 +19,15 @@ public:
 	// Sets default values for this component's properties
 	USEU_HealthComponent();
 
-	float GetHealth() const { return Health;}
-
+	FOnDeathSignature OnDeath;
+	
+	FOnHealthChangedSignature OnHealthChanged;
+	
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health);}
 	
-	FOnDeath OnDeath;
-	
-	FOnHealthChanged OnHealthChanged;
-	
+	float GetHealth() const { return Health;}
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
