@@ -85,8 +85,5 @@ Build/*
 
 Plugins/Developer/RiderLink
 #Exclude ExternalContent
-Content/AssetPacks/
-#Content/Animations/*
-#Content/Characters/*
-#Content/Environment/*
-#Content/Sounds/*
+Content/AssetPacks/*
+Content/ExternalContent/*
