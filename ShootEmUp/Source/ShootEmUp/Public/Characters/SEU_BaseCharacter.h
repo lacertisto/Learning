@@ -9,6 +9,9 @@
 class USpringArmComponent;
 class UCameraComponent;
 class USEU_CharacterMovementComponent;
+class USEU_HealthComponent;
+class UTextRenderComponent;
+class UAnimMontage;
 
 UCLASS()
 class SHOOTEMUP_API ASEU_BaseCharacter : public ACharacter
@@ -42,7 +45,13 @@ protected:
 	UCameraComponent* CameraComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-	USEU_CharacterMovementComponent* CharacterMovementComponent;
+	USEU_HealthComponent* HealthComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Health")
+	UTextRenderComponent* HealthTextComponent;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Animation")
+	UAnimMontage* DeathMontage;
 	
 private:
 
@@ -53,5 +62,8 @@ private:
 
 	bool bWantsToRun = false;
 	bool bIsMovingForward = false;
+	
+	void OnDeath();
+	void OnHealthChanged(float Health);
 };
 

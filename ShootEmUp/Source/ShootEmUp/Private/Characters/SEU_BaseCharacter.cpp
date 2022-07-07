@@ -6,6 +6,11 @@
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SEU_CharacterMovementComponent.h"
+#include "Components/SEU_HealthComponent.h"
+#include "Components/TextRenderComponent.h"
+#include "GameFramework/Controller.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All,All);
 
 // Modified constructor with calling parent constructor and passing new movement component class to override configurations
 ASEU_BaseCharacter::ASEU_BaseCharacter(const FObjectInitializer& ObjInit)
@@ -20,13 +25,45 @@ ASEU_BaseCharacter::ASEU_BaseCharacter(const FObjectInitializer& ObjInit)
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
+
+	HealthComponent = CreateDefaultSubobject<USEU_HealthComponent>("Health Component");
+
+	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("Health Text");
+	HealthTextComponent->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void ASEU_BaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	check(HealthComponent);
+	check(HealthTextComponent);
+	check(GetCharacterMovement());
+	OnHealthChanged(HealthComponent->GetHealth()); //explicit call of health changed function for update text render value of health
+	HealthComponent->OnDeath.AddUObject(this,&ASEU_BaseCharacter::OnDeath);
+	HealthComponent->OnHealthChanged.AddUObject(this,&ASEU_BaseCharacter::OnHealthChanged);
+}
+
+// Called every frame
+void ASEU_BaseCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+// Called to bind functionality to input
+void ASEU_BaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis("MoveForward",this,&ASEU_BaseCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight",this,&ASEU_BaseCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("LookUp",this,&ASEU_BaseCharacter::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("TurnAround",this,&ASEU_BaseCharacter::AddControllerYawInput);
+	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&ASEU_BaseCharacter::Jump);
+	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&ASEU_BaseCharacter::OnStartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released,this,&ASEU_BaseCharacter::OnStopRunning);
 }
 
 bool ASEU_BaseCharacter::IsRunning() const
@@ -50,8 +87,12 @@ float ASEU_BaseCharacter::GetMovementDirection() const
 
 void ASEU_BaseCharacter::MoveForward(float Scale)
 {
-	bIsMovingForward = Scale > 0.f;
-	AddMovementInput(GetActorForwardVector(), Scale);
+	const auto CharacterFalling = Cast<USEU_CharacterMovementComponent>(GetComponentByClass(USEU_CharacterMovementComponent::StaticClass()));
+	if(!CharacterFalling->IsFalling())
+	{
+		bIsMovingForward = Scale > 0.f;
+		AddMovementInput(GetActorForwardVector(), Scale);
+	}
 }
 
 void ASEU_BaseCharacter::MoveRight(float Scale)
@@ -69,23 +110,21 @@ void ASEU_BaseCharacter::OnStopRunning()
 	bWantsToRun = false;
 }
 
-// Called every frame
-void ASEU_BaseCharacter::Tick(float DeltaTime)
+void ASEU_BaseCharacter::OnDeath()
 {
-	Super::Tick(DeltaTime);
+	UE_LOG(LogBaseCharacter,Warning, TEXT("Character %s is Dead!"), *GetName());
+	GetCharacterMovement()->DisableMovement();
+	PlayAnimMontage(DeathMontage);
+	SetLifeSpan(5.0f);
+
+	if(Controller)
+	{
+		Controller->ChangeState(NAME_Spectating);
+	}
+	
 }
 
-// Called to bind functionality to input
-void ASEU_BaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ASEU_BaseCharacter::OnHealthChanged(float Health)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("MoveForward",this,&ASEU_BaseCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight",this,&ASEU_BaseCharacter::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp",this,&ASEU_BaseCharacter::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("TurnAround",this,&ASEU_BaseCharacter::AddControllerYawInput);
-	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&ASEU_BaseCharacter::Jump);
-	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&ASEU_BaseCharacter::OnStartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released,this,&ASEU_BaseCharacter::OnStopRunning);
+	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"),Health)));
 }
-
