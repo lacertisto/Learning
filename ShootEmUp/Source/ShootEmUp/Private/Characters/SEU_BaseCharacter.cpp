@@ -9,6 +9,7 @@
 #include "Components/SEU_HealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Controller.h"
+#include "Weapons/SEU_BaseWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All,All);
 
@@ -45,6 +46,7 @@ void ASEU_BaseCharacter::BeginPlay()
 	HealthComponent->OnHealthChanged.AddUObject(this,&ASEU_BaseCharacter::OnHealthChanged);
 
 	LandedDelegate.AddDynamic(this,&ASEU_BaseCharacter::OnGroundLanded);
+	SpawnWeapon();
 }
 
 // Called every frame
@@ -142,4 +144,16 @@ void ASEU_BaseCharacter::OnGroundLanded(const FHitResult& Hit)
 	const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity,LandedDamage, FallVelocity);
 	UE_LOG(LogBaseCharacter,Display,TEXT("final damage: %f"), FinalDamage);
 	TakeDamage(FinalDamage,FDamageEvent{},nullptr,nullptr);
+}
+
+void ASEU_BaseCharacter::SpawnWeapon()
+{
+	if (!GetWorld()) return;
+
+	const auto Weapon = GetWorld()->SpawnActor<ASEU_BaseWeapon>(WeaponClass);
+	if (Weapon)
+	{
+		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget,false);
+		Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponSocket");
+	}
 }

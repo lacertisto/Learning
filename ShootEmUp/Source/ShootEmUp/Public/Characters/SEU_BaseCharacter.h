@@ -12,6 +12,7 @@ class USEU_CharacterMovementComponent;
 class USEU_HealthComponent;
 class UTextRenderComponent;
 class UAnimMontage;
+class ASEU_BaseWeapon;
 
 UCLASS()
 class SHOOTEMUP_API ASEU_BaseCharacter : public ACharacter
@@ -38,30 +39,32 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* CameraComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USEU_HealthComponent* HealthComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Health")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
 	UTextRenderComponent* HealthTextComponent;
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Animation")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* DeathMontage;
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 	FVector2D LandedDamageVelocity = FVector2D(900.f,1200.f);
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 	FVector2D LandedDamage = FVector2D(10.f,100.f);
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 	float LifeSpanOnDeath = 5.f;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<ASEU_BaseWeapon> WeaponClass;
 	
 private:
 
@@ -78,5 +81,7 @@ private:
 
 	UFUNCTION()
 	void OnGroundLanded(const FHitResult& Hit);
+
+	void SpawnWeapon();
 };
 
