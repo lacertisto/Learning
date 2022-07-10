@@ -12,7 +12,7 @@ class USEU_CharacterMovementComponent;
 class USEU_HealthComponent;
 class UTextRenderComponent;
 class UAnimMontage;
-class ASEU_BaseWeapon;
+class USEU_WeaponComponent;
 
 UCLASS()
 class SHOOTEMUP_API ASEU_BaseCharacter : public ACharacter
@@ -48,6 +48,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USEU_HealthComponent* HealthComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	USEU_WeaponComponent* WeaponComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
 	UTextRenderComponent* HealthTextComponent;
 
@@ -63,8 +66,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 	float LifeSpanOnDeath = 5.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<ASEU_BaseWeapon> WeaponClass;
+
 	
 private:
 
@@ -82,6 +84,6 @@ private:
 	UFUNCTION()
 	void OnGroundLanded(const FHitResult& Hit);
 
-	void SpawnWeapon();
+
 };
 

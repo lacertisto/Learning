@@ -9,7 +9,8 @@
 #include "Components/SEU_HealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/Controller.h"
-#include "Weapons/SEU_BaseWeapon.h"
+#include "Components/SEU_WeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All,All);
 
@@ -28,9 +29,11 @@ ASEU_BaseCharacter::ASEU_BaseCharacter(const FObjectInitializer& ObjInit)
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
 	HealthComponent = CreateDefaultSubobject<USEU_HealthComponent>("Health Component");
+	WeaponComponent = CreateDefaultSubobject<USEU_WeaponComponent>("Weapon Component");
 
 	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("Health Text");
 	HealthTextComponent->SetupAttachment(GetRootComponent());
+	HealthTextComponent->bOwnerNoSee = true;
 }
 
 // Called when the game starts or when spawned
@@ -46,7 +49,6 @@ void ASEU_BaseCharacter::BeginPlay()
 	HealthComponent->OnHealthChanged.AddUObject(this,&ASEU_BaseCharacter::OnHealthChanged);
 
 	LandedDelegate.AddDynamic(this,&ASEU_BaseCharacter::OnGroundLanded);
-	SpawnWeapon();
 }
 
 // Called every frame
@@ -61,6 +63,7 @@ void ASEU_BaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
+	check(WeaponComponent);
 	
 	PlayerInputComponent->BindAxis("MoveForward",this,&ASEU_BaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight",this,&ASEU_BaseCharacter::MoveRight);
@@ -69,6 +72,7 @@ void ASEU_BaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&ASEU_BaseCharacter::Jump);
 	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&ASEU_BaseCharacter::OnStartRunning);
 	PlayerInputComponent->BindAction("Run", IE_Released,this,&ASEU_BaseCharacter::OnStopRunning);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USEU_WeaponComponent::Fire);
 }
 
 bool ASEU_BaseCharacter::IsRunning() const
@@ -121,6 +125,7 @@ void ASEU_BaseCharacter::OnDeath()
 	GetCharacterMovement()->DisableMovement();
 	PlayAnimMontage(DeathMontage);
 	SetLifeSpan(LifeSpanOnDeath);
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
 	if(Controller)
 	{
@@ -146,14 +151,4 @@ void ASEU_BaseCharacter::OnGroundLanded(const FHitResult& Hit)
 	TakeDamage(FinalDamage,FDamageEvent{},nullptr,nullptr);
 }
 
-void ASEU_BaseCharacter::SpawnWeapon()
-{
-	if (!GetWorld()) return;
 
-	const auto Weapon = GetWorld()->SpawnActor<ASEU_BaseWeapon>(WeaponClass);
-	if (Weapon)
-	{
-		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget,false);
-		Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponSocket");
-	}
-}
