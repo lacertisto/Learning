@@ -72,7 +72,8 @@ void ASEU_BaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&ASEU_BaseCharacter::Jump);
 	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&ASEU_BaseCharacter::OnStartRunning);
 	PlayerInputComponent->BindAction("Run", IE_Released,this,&ASEU_BaseCharacter::OnStopRunning);
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USEU_WeaponComponent::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USEU_WeaponComponent::StartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &USEU_WeaponComponent::StopFire);
 }
 
 bool ASEU_BaseCharacter::IsRunning() const

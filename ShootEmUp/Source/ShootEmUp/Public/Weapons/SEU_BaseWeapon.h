@@ -17,11 +17,11 @@ public:
 	// Sets default values for this actor's properties
 	ASEU_BaseWeapon();
 
-	virtual void Fire();
+	virtual void StartFire();
+
+	virtual void StopFire();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMeshComponent;
@@ -29,15 +29,19 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FName MuzzleSocketName = "MuzzleSocket";
 
-	UPROPERTY(VisibleAnywhere, BLueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BLueprintReadWrite, Category = "Damage")
 	float TraceMaxDistance = 1500.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float Damage = 15.f;
 
-private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	float FireRate = 0.1f;
 
-	void PerformShot();
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	virtual void PerformShot();
 
 	APlayerController* GetPlayerController() const;
 
@@ -45,11 +49,15 @@ private:
 
 	FVector GetMuzzleWorldLocation() const;
 
-	bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
+	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 
 	void PerformLineTrace(FHitResult& OutHitResult, const FVector& TraceStart, const FVector& TraceEnd) const;
 
 	float GetShotAngle(const FHitResult& HitResult, const FVector& TraceEnd) const;
 
 	void InflictDamage(const FHitResult& HitResult);
+
+private:
+
+	
 };

@@ -17,7 +17,8 @@ public:
 	// Sets default values for this component's properties
 	USEU_WeaponComponent();
 
-	void Fire();
+	void StartFire();
+	void StopFire();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
