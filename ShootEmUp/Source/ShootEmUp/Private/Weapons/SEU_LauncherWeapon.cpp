@@ -3,33 +3,35 @@
 
 #include "Weapons/SEU_LauncherWeapon.h"
 #include "SEU_LauncherWeapon.h"
+#include "Weapons/SEU_Projectile.h"
 
 void ASEU_LauncherWeapon::PerformShot()
 {
-	if (!GetWorld())
-		return;
-
+	if (!GetWorld()) return;
+	
 	FVector TraceStart, TraceEnd;
-	if (!GetTraceData(TraceStart, TraceEnd))
-		return;
+	if (!GetTraceData(TraceStart, TraceEnd)) return;
 
 	FHitResult HitResult;
 	PerformLineTrace(HitResult, TraceStart, TraceEnd);
 
-	if (GetShotAngle(HitResult, TraceEnd) < 90.f && HitResult.bBlockingHit)
+	const FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
+	const FVector Direction = (EndPoint - GetMuzzleWorldLocation()).GetSafeNormal();
+
+	const FTransform SpawnTransform(FRotator::ZeroRotator, GetMuzzleWorldLocation());
+	ASEU_Projectile* Projectile = GetWorld()->SpawnActorDeferred<ASEU_Projectile>(ProjectileClass, SpawnTransform);
+
+	if (Projectile)
 	{
-		InflictDamage(HitResult);
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 5.f, 0, 3.f);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 12.f, 24, FColor::Red, false, 5.f, 0, 3.f);
+		Projectile->SetShotDirection(Direction);
+		Projectile->FinishSpawning(SpawnTransform);
 	}
-	else
-	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 5.f, 0, 3.f);
-	}
+
 }
 
 void ASEU_LauncherWeapon::StartFire()
 {
+	PerformShot();
 }
 
 void ASEU_LauncherWeapon::StopFire()

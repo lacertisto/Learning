@@ -6,9 +6,8 @@
 #include "Weapons/SEU_BaseWeapon.h"
 #include "SEU_LauncherWeapon.generated.h"
 
-/**
- * 
- */
+class ASEU_Projectile;
+
 UCLASS()
 class SHOOTEMUP_API ASEU_LauncherWeapon : public ASEU_BaseWeapon
 {
@@ -21,6 +20,9 @@ public:
 	virtual void StopFire() override;
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<ASEU_Projectile> ProjectileClass;
 
 	virtual void PerformShot() override;
 };
