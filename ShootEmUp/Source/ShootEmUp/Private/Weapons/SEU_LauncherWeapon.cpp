@@ -24,6 +24,8 @@ void ASEU_LauncherWeapon::PerformShot()
 	if (Projectile)
 	{
 		Projectile->SetShotDirection(Direction);
+		Projectile->SetOwner(GetOwner());
+		Projectile->SetDamageAmount(Damage);
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 

@@ -50,7 +50,7 @@ void USEU_HealthComponent::Heal()
 {
 	SetHealth(Health + HealAmount);
 
-	if(FMath::IsNearlyEqual(Health, MaxHealth))
+	if(FMath::IsNearlyEqual(Health, MaxHealth) || IsDead())
 	{
 		GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
 	}
