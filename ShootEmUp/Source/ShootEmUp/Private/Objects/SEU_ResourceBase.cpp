@@ -15,22 +15,17 @@ void USEU_ResourceBase::SetResourceParams(const FResourceParams& NewResourcePara
 	}
 }
 
-void USEU_ResourceBase::SetUpdateBehaviour(const FResourceParams& ResourceParams)
-{
-	
-}
-
-void USEU_ResourceBase::StopTimer(const FTimerHandle& TimerHandle) const
+void USEU_ResourceBase::StopTimer(FTimerHandle& TimerHandle) const
 {
 	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
 
-	if(TimerManager.IsTimerActive(UpdateValueTimerHandle))
+	if(TimerManager.IsTimerActive(TimerHandle))
 	{
-		TimerManager.ClearTimer(UpdateValueTimerHandle);
+		TimerManager.ClearTimer(TimerHandle);
 	}
 }
 
-void ESEU_ResourceBase::UpdateResourceValue()
+void USEU_ResourceBase::UpdateResourceValue(float DeltaValue)
 {
 
 }

@@ -19,20 +19,32 @@ public:
 
 	void StartFire();
 	void StopFire();
+	void SwapWeapon();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<ASEU_BaseWeapon> WeaponClass;
+	TArray<TSubclassOf<ASEU_BaseWeapon>> WeaponClasses;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	FName WeaponAttachPointName = "WeaponSocket";
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	FName WeaponArmoryPointName = "ArmorySocket";
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 	UPROPERTY()
 	ASEU_BaseWeapon* CurrentWeapon = nullptr;
 
-	void SpawnWeapon();
+	UPROPERTY()
+	TArray<ASEU_BaseWeapon*> Weapons;
+
+	int32 CurrentWeaponIndex = 0;
+
+	void SpawnWeapons();
+	void AttachWeaponToSocket(ASEU_BaseWeapon* Weapon, USceneComponent* CharacterMesh, const FName& SocketName);
+	void EquipWeapon(int32 WeaponIndex);
 };

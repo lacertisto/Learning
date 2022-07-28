@@ -74,6 +74,7 @@ void ASEU_BaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("Run", IE_Released,this,&ASEU_BaseCharacter::OnStopRunning);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USEU_WeaponComponent::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &USEU_WeaponComponent::StopFire);
+	PlayerInputComponent->BindAction("SwapWeapon", IE_Pressed, WeaponComponent, &USEU_WeaponComponent::SwapWeapon);
 }
 
 bool ASEU_BaseCharacter::IsRunning() const
@@ -127,6 +128,7 @@ void ASEU_BaseCharacter::OnDeath()
 	PlayAnimMontage(DeathMontage);
 	SetLifeSpan(LifeSpanOnDeath);
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	WeaponComponent->StopFire();
 
 	if(Controller)
 	{
