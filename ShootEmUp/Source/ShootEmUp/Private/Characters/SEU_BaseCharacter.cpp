@@ -28,12 +28,15 @@ ASEU_BaseCharacter::ASEU_BaseCharacter(const FObjectInitializer& ObjInit)
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
+
+	//TODO: Rename HealthComponent to ResourceComponent and add Resource as derived objects from component
 	HealthComponent = CreateDefaultSubobject<USEU_HealthComponent>("Health Component");
 	WeaponComponent = CreateDefaultSubobject<USEU_WeaponComponent>("Weapon Component");
 
 	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("Health Text");
 	HealthTextComponent->SetupAttachment(GetRootComponent());
 	HealthTextComponent->bOwnerNoSee = true;
+
 }
 
 // Called when the game starts or when spawned

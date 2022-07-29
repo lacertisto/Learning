@@ -9,19 +9,28 @@ void USEU_ResourceBase::SetResourceParams(const FResourceParams& NewResourcePara
 {
 	ResourceParams = NewResourceParams;
 	
-	if(ResourceParams.bUpdateEnabled == true)
-	{
-		GetWorld()->GetTimerManager().SetTimer(UpdateValueTimerHandle, ResourceParams.UpdateFrequency, true, ResourceParams.UpdateInitialDelay);
-	}
+	UpdateTimerState(ResourceParams.bUpdateEnabled);
 }
 
-void USEU_ResourceBase::StopTimer(FTimerHandle& TimerHandle) const
+void USEU_ResourceBase::HandleDamage(float& Damage)
+{
+
+}
+
+/**
+	
+*/
+void USEU_ResourceBase::UpdateTimerState(const bool bActivate)
 {
 	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
-
-	if(TimerManager.IsTimerActive(TimerHandle))
+	if (bActivate)
 	{
-		TimerManager.ClearTimer(TimerHandle);
+		TimerManager.SetTimer(
+			UpdateValueTimerHandle, ResourceParams.UpdateFrequency, true, ResourceParams.UpdateInitialDelay);
+	}
+	else
+	{
+		TimerManager.ClearTimer(UpdateValueTimerHandle);
 	}
 }
 

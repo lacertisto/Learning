@@ -31,6 +31,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	FName WeaponArmoryPointName = "ArmorySocket";
 
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* EquipAnimMontage;
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -47,4 +50,6 @@ private:
 	void SpawnWeapons();
 	void AttachWeaponToSocket(ASEU_BaseWeapon* Weapon, USceneComponent* CharacterMesh, const FName& SocketName);
 	void EquipWeapon(int32 WeaponIndex);
+
+	void PlayAnimMontage(UAnimMontage* AnimMontage);
 };

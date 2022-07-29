@@ -50,6 +50,7 @@ class SHOOTEMUP_API USEU_ResourceBase : public UObject
 		/** Set or Return whole structure*/
 		void SetResourceParams(const FResourceParams& NewResourceParams);
 		FResourceParams GetResourceParams() const { return ResourceParams;}
+		virtual void HandleDamage(float& Damage);
 
 	protected:
 
@@ -57,5 +58,5 @@ class SHOOTEMUP_API USEU_ResourceBase : public UObject
 		FTimerHandle UpdateValueTimerHandle;
 
 		void UpdateResourceValue(const float DeltaValue);
-		void StopTimer(FTimerHandle& TimerHandle) const;
+		void UpdateTimerState(const bool bIsActive);
 };
