@@ -24,6 +24,7 @@ ASEU_BaseWeapon::ASEU_BaseWeapon()
 void ASEU_BaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentAmmo = DefaultAmmo;
 	check(WeaponMeshComponent)
 }
 
@@ -100,4 +101,42 @@ void ASEU_BaseWeapon::InflictDamage(const FHitResult& HitResult)
 	{
 		Victim->TakeDamage(Damage, FDamageEvent{}, GetPlayerController(), GetOwner());
 	}
+}
+
+void ASEU_BaseWeapon::DecreaseAmmo()
+{
+	CurrentAmmo.Bullets--;
+	LogAmmo();
+
+	if (IsClipEmpty() && !IsAmmoEmpty())
+	{
+		Reload();
+	}
+}
+
+bool ASEU_BaseWeapon::IsAmmoEmpty() const
+{
+	return !CurrentAmmo.bHasInfiniteAmmo && IsClipEmpty() && CurrentAmmo.ClipsAmount == NULL;
+}
+
+bool ASEU_BaseWeapon::IsClipEmpty() const
+{
+	return CurrentAmmo.Bullets == NULL;
+}
+
+void ASEU_BaseWeapon::Reload()
+{
+	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+	if (!CurrentAmmo.bHasInfiniteAmmo)
+	{
+		CurrentAmmo.ClipsAmount--;
+	}
+	UE_LOG(LogBaseWeapon, Warning, TEXT("Reload is happened!"));
+}
+
+void ASEU_BaseWeapon::LogAmmo()
+{
+	FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + "/";
+	AmmoInfo += CurrentAmmo.bHasInfiniteAmmo ? "Infinite" : FString::FromInt(CurrentAmmo.ClipsAmount);
+	UE_LOG(LogBaseWeapon, Warning, TEXT("%s"), *AmmoInfo);
 }

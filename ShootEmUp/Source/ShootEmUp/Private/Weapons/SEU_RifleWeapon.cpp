@@ -7,12 +7,18 @@
 
 void ASEU_RifleWeapon::PerformShot()
 {
-	if (!GetWorld())
+	if (!GetWorld() || IsAmmoEmpty())
+	{
+		StopFire();
 		return;
+	}
 
 	FVector TraceStart, TraceEnd;
 	if (!GetTraceData(TraceStart, TraceEnd))
+	{
+		StopFire();
 		return;
+	}
 
 	FHitResult HitResult;
 	PerformLineTrace(HitResult, TraceStart, TraceEnd);
@@ -27,6 +33,8 @@ void ASEU_RifleWeapon::PerformShot()
 	{
 		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 5.f, 0, 3.f);
 	}
+
+	DecreaseAmmo();
 }
 
 void ASEU_RifleWeapon::StartFire()

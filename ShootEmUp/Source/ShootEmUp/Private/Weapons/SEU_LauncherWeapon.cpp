@@ -7,7 +7,7 @@
 
 void ASEU_LauncherWeapon::PerformShot()
 {
-	if (!GetWorld()) return;
+	if (!GetWorld() || IsAmmoEmpty()) return;
 	
 	FVector TraceStart, TraceEnd;
 	if (!GetTraceData(TraceStart, TraceEnd)) return;
@@ -28,7 +28,7 @@ void ASEU_LauncherWeapon::PerformShot()
 		Projectile->SetDamageAmount(Damage);
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-
+	DecreaseAmmo();
 }
 
 void ASEU_LauncherWeapon::StartFire()

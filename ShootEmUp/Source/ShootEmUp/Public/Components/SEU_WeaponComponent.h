@@ -46,10 +46,16 @@ private:
 	TArray<ASEU_BaseWeapon*> Weapons;
 
 	int32 CurrentWeaponIndex = 0;
+	bool EquipAnimationInProgress = false;
 
 	void SpawnWeapons();
 	void AttachWeaponToSocket(ASEU_BaseWeapon* Weapon, USceneComponent* CharacterMesh, const FName& SocketName);
 	void EquipWeapon(int32 WeaponIndex);
 
 	void PlayAnimMontage(UAnimMontage* AnimMontage);
+	void InitAnimations();
+	void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+
+	bool CanFire() const;
+	bool CanEquip() const;
 };

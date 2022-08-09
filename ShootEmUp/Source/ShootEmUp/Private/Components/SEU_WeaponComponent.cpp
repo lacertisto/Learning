@@ -5,6 +5,9 @@
 #include "Components/SEU_WeaponComponent.h"
 #include "Weapons/SEU_BaseWeapon.h"
 #include "GameFramework/Character.h"
+#include "Animations/SEU_EquipFinishedAnimNotify.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
 // Sets default values for this component's properties
 USEU_WeaponComponent::USEU_WeaponComponent()
@@ -20,6 +23,7 @@ void USEU_WeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitAnimations();
 	SpawnWeapons();
 	EquipWeapon(CurrentWeaponIndex);
 }
@@ -51,7 +55,6 @@ void USEU_WeaponComponent::SpawnWeapons()
 
 		AttachWeaponToSocket(Weapon, Character->GetMesh(), WeaponArmoryPointName);
 	}
-	
 
 }
 
@@ -76,6 +79,7 @@ void USEU_WeaponComponent::EquipWeapon(int32 WeaponIndex)
 
 	CurrentWeapon = Weapons[WeaponIndex];
 	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponAttachPointName);
+	EquipAnimationInProgress = true;
 	PlayAnimMontage(EquipAnimMontage);
 }
 
@@ -89,7 +93,8 @@ void USEU_WeaponComponent::PlayAnimMontage(UAnimMontage* AnimMontage)
 
 void USEU_WeaponComponent::StartFire()
 {
-	if (!CurrentWeapon) return;
+	if (!CanFire())
+		return;
 	CurrentWeapon->StartFire();
 }
 
@@ -101,6 +106,43 @@ void USEU_WeaponComponent::StopFire()
 
 void USEU_WeaponComponent::SwapWeapon()
 {
+	if (!CanEquip())
+		return;
 	CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
 	EquipWeapon(CurrentWeaponIndex);
+}
+
+void USEU_WeaponComponent::InitAnimations()
+{
+	if (!EquipAnimMontage)
+		return;
+
+	const TArray<FAnimNotifyEvent> AnimNotifies = EquipAnimMontage->Notifies;
+	for (FAnimNotifyEvent NotifyEvent : AnimNotifies)
+	{
+		if (TObjectPtr<USEU_EquipFinishedAnimNotify> EquipFinishedNotify = Cast<USEU_EquipFinishedAnimNotify>(NotifyEvent.Notify))
+		{
+			EquipFinishedNotify->OnNotified.AddUObject(this, &USEU_WeaponComponent::OnEquipFinished);
+			break;
+		}
+
+	}
+}
+
+void USEU_WeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character || Character->GetMesh() != MeshComp)
+		return;
+	EquipAnimationInProgress = false;
+}
+
+bool USEU_WeaponComponent::CanFire() const
+{
+	return CurrentWeapon && !EquipAnimationInProgress;
+}
+
+bool USEU_WeaponComponent::CanEquip() const
+{
+	return !EquipAnimationInProgress;
 }
