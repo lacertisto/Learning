@@ -26,10 +26,14 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TObjectPtr<USpringArmComponent> SpringArmComponent = nullptr;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass = nullptr;
+
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
 
+	void PrimaryAttack();
 
 public:	
 	virtual void Tick(float DeltaTime) override;
