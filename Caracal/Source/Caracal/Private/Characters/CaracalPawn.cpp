@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/InputComponent.h"
 
 // Sets default values
 ACaracalPawn::ACaracalPawn()
@@ -17,13 +18,6 @@ ACaracalPawn::ACaracalPawn()
 	MeshComponent->SetupAttachment(RootComponent);
 	MeshComponent->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
 	MeshComponent->Mobility = EComponentMobility::Movable;
-
-	//find mesh by path
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> Mesh(TEXT("StaticMesh'/Engine/BasicShapes/Cylinder.Cylinder'"));
-
-	//TObjectPtr<UStaticMesh> Mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *AssetToLoad.GetAssetPathString()));
-
-	MeshComponent->SetStaticMesh(Mesh.Object);
 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArmComponent->SetupAttachment(MeshComponent);
@@ -39,6 +33,8 @@ ACaracalPawn::ACaracalPawn()
 	CameraComponent->FieldOfView = 110.f;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
+	CurrentVelocity = FVector(0.f);
 }
 
 // Called when the game starts or when spawned
@@ -51,7 +47,8 @@ void ACaracalPawn::BeginPlay()
 void ACaracalPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	FVector NewLocation = GetActorLocation() + (CurrentVelocity * DeltaTime);
+	SetActorLocation(NewLocation);
 }
 
 // Called to bind functionality to input
@@ -59,5 +56,17 @@ void ACaracalPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis(TEXT("MoveForwardBackward"), this, &ACaracalPawn::MoveForwardBackward);
+	PlayerInputComponent->BindAxis(TEXT("MoveRightLeft"), this, &ACaracalPawn::MoveRightLeft);
+//	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, );
 }
 
+void ACaracalPawn::MoveForwardBackward(float Value)
+{
+	CurrentVelocity.X = FMath::Clamp(Value, -1.f, 1.f) * MaxSpeed;
+}
+
+void ACaracalPawn::MoveRightLeft(float Value)
+{
+	CurrentVelocity.Y = FMath::Clamp(Value, -1.f, 1.f) * MaxSpeed;
+}

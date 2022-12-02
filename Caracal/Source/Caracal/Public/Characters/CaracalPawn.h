@@ -19,6 +19,13 @@ public:
 	// Sets default values for this pawn's properties
 	ACaracalPawn();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Mesh")
 	TObjectPtr<UStaticMeshComponent> MeshComponent = nullptr;
@@ -29,17 +36,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	TObjectPtr<USpringArmComponent> SpringArmComponent = nullptr;
 
-	//UPROPERTY(EditAnywhere, Category = "Mesh Source")
-	//FSoftObjectPath AssetToLoad = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Movement", meta=(ClampMin = 1.f, ClampMax = 100.f))
+	float MaxSpeed = 100.f;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+private:
+	void MoveForwardBackward(float Value);
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void MoveRightLeft(float Value);
+
+	FVector CurrentVelocity = FVector::ZeroVector;
 
 };
